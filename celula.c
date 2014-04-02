@@ -42,7 +42,7 @@
 *
 ***************************************************************************/
 	
-	struct CEL_tagCelula {
+	typedef struct CEL_tagCelula {
 		
 		int estado_atual;
 		/* Indica o estado atual da célula */
@@ -50,7 +50,7 @@
 		int estado_correto;
 		/* Indica o estado correto da célula */
 
-	};
+	} CEL_tpCelula;
 
 
 
@@ -62,7 +62,7 @@
 		
 	CEL_tpCondRet CEL_criaCelula ( CEL_tppCelula* refCelula ){
 		
-		*refCelula = (CEL_tagCelula*)malloc(sizeof(CEL_tagCelula));
+		*refCelula = (CEL_tpCelula*)malloc(sizeof(CEL_tpCelula));
 
 		if ( *refCelula == NULL )
 			return CEL_CondRetFaltouMemoria ;
@@ -116,7 +116,7 @@
 *	Função:	CEL Altera Estado Atual
 */
 
-	CEL_tpCondRet CEL_alteraEstadoAtual ( CEL_tppCelula pCelula , int valor ){
+	CEL_tpCondRet CEL_alteraEstadoAtual ( CEL_tppCelula* pCelula , int valor ){
 		
 		pCelula->estado_atual = valor;
 
@@ -128,7 +128,7 @@
 *	Função:	CEL Altera Estado Correto
 */
 
-	CEL_tpCondRet CEL_alteraestadoCorreto ( CEL_tppCelula pCelula, int valor ){
+	CEL_tpCondRet CEL_alteraestadoCorreto ( CEL_tppCelula* pCelula, int valor ){
 		
 		pCelula->estado_atual = valor;
 

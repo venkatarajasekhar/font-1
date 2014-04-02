@@ -51,7 +51,7 @@
 
 /* Tipo ponteiro para uma lista */
 
-typedef struct LIS_tagLista* LIS_tppLista ;
+typedef LIS_tpLista * LIS_tppLista ;
 
 
 
