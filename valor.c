@@ -32,7 +32,7 @@
 
 /****************** Declarações encapsuladas pelo módulo ******************/
 
-	typedef struct VAL_tagValor {
+	struct VAL_tagValor {
 		
 		int resolvido;
 		/* Indica se o valor foi resolvido corretamente ou não */
@@ -40,7 +40,7 @@
 		int num_celulas;
 		/* Indica o número de células a que o valor se refere */
 
-	} VAL_tpValor;
+	};
 
 
 
@@ -52,7 +52,7 @@
 
 	VAL_tpCondRet VAL_criaValor ( VAL_tppValor* refValor ){
 	
-		*refValor = (VAL_tpValor*) malloc ( sizeof(VAL_tpValor) );
+		*refValor = (VAL_tagValor*) malloc ( sizeof(VAL_tagValor) );
 
 		if( *refValor == NULL ){
 			return VAL_CondRetFaltouMemoria ;
@@ -107,7 +107,7 @@
 *	Função: VAL Obtem Número de Células
 */
 
-	int VAL_obtemNumeroCelulas ( VAL_tpValor pValor, int* refNumCel ){
+	int VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* refNumCel ){
 	
 		*refNumCel = pValor->num_celulas ;
 

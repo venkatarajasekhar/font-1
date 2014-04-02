@@ -40,7 +40,9 @@
 *
 ***************************************************************************/
 
-typedef struct LIS_tagElemLista {
+typedef struct LIS_tagElemLista LIS_tpElemLista;
+
+struct LIS_tagElemLista {
 
 	void * pValor ;
 		/* Ponteiro para o valor contido no elemento */
@@ -51,7 +53,7 @@ typedef struct LIS_tagElemLista {
 	struct tagElemLista * pProx ;
 		/* Ponteiro para o elemento sucessor */
 
-} LIS_tpElemLista ;
+};
 
 
 
@@ -64,24 +66,24 @@ typedef struct LIS_tagElemLista {
 *
 ***************************************************************************/
 
-typedef struct LIS_tagLista {
+	struct LIS_tagLista {
 	
-	LIS_tpElemLista * pOrigemLista ;
-		/* Ponteiro para a origem da lista */
+		LIS_tpElemLista * pOrigemLista ;
+			/* Ponteiro para a origem da lista */
 	
-	LIS_tpElemLista * pFimLista ;
-		/* Ponteiro para o final da lista */
+		LIS_tpElemLista * pFimLista ;
+			/* Ponteiro para o final da lista */
 	
-	LIS_tpElemLista * pElemCorr ;
-		/* Ponteiro para o elemento corrente da lista */
+		LIS_tpElemLista * pElemCorr ;
+			/* Ponteiro para o elemento corrente da lista */
 	
-	unsigned int numElem ;
-		/* Número de elementos da lista */
+		unsigned int numElem ;
+			/* Número de elementos da lista */
 	
-	void (*ExcluirValor)(void * pValor) ;
-		/* Ponteiro para a função de destruição do valor contido em um elemento */
+		void (*ExcluirValor)(void * pValor) ;
+			/* Ponteiro para a função de destruição do valor contido em um elemento */
 	
-} LIS_tpLista ;
+	};
 
 
 
@@ -104,7 +106,7 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 
 	LIS_tpCondRet LIS_CriarLista ( LIS_tppLista * refLista , void(*ExcluirValor)(void * pDado) )
 	{
-		*refLista = (LIS_tpLista*)malloc(sizeof(LIS_tpLista));
+		*refLista = (LIS_tagLista*)malloc(sizeof(LIS_tagLista));
 	
 		if ( *refLista == NULL )
 			return LIS_CondRetFaltouMemoria ;
@@ -180,7 +182,7 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 	LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor )
 	{
 		// Criar elemento a inserir antes
-		LIS_tpElemento * pElem = LIS_CriarElemento (pLista, pValor);
+		LIS_tpElemLista * pElem = LIS_CriarElemento (pLista, pValor);
 
 		if ( pElem == NULL )
 			return LIS_CondRetFaltouMemoria ;
@@ -197,7 +199,7 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 			if ( pLista->pElemCorr->pAnt != NULL ) 
 			{
 				pElem->pAnt = pLista->pElemCorr->pAnt;
-				pLista->pElemCorr->pAnt->pProx = pElem ;
+				pLista->pElemCorr->pAnt->pProx = pElem;
 			} 
 
 			else 
@@ -229,7 +231,7 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 		{
 				/* Criar elemento a inserir após */
 			LIS_tpElemLista * pElem ;
-			pElem = CriarElemento( pLista , pValor ) ;
+			pElem = LIS_CriarElemento( pLista , pValor ) ;
 
 			if ( pElem == NULL )
 				return LIS_CondRetFaltouMemoria ;

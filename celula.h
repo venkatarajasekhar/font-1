@@ -46,7 +46,7 @@
 
 /* Tipo ponteiro para uma célula */
 
-typedef CEL_tpCelula* CEL_tppCelula ;
+typedef struct CEL_tagCelula* CEL_tppCelula ;
 
 
 
