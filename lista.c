@@ -40,9 +40,7 @@
 *
 ***************************************************************************/
 
-typedef struct LIS_tagElemLista LIS_tpElemLista;
-
-struct LIS_tagElemLista {
+typedef struct LIS_tagElemLista {
 
 	void * pValor ;
 		/* Ponteiro para o valor contido no elemento */
@@ -53,8 +51,7 @@ struct LIS_tagElemLista {
 	struct tagElemLista * pProx ;
 		/* Ponteiro para o elemento sucessor */
 
-};
-
+}LIS_tpElemLista;
 
 
 /***************************************************************************
@@ -68,13 +65,13 @@ struct LIS_tagElemLista {
 
 	struct LIS_tagLista {
 	
-		LIS_tpElemLista * pOrigemLista ;
+		LIS_tagElemLista * pOrigemLista ;
 			/* Ponteiro para a origem da lista */
 	
-		LIS_tpElemLista * pFimLista ;
+		LIS_tagElemLista * pFimLista ;
 			/* Ponteiro para o final da lista */
 	
-		LIS_tpElemLista * pElemCorr ;
+		LIS_tagElemLista * pElemCorr ;
 			/* Ponteiro para o elemento corrente da lista */
 	
 		unsigned int numElem ;
