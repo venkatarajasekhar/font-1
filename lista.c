@@ -40,18 +40,18 @@
 *
 ***************************************************************************/
 
-typedef struct LIS_tagElemLista {
+	typedef struct LIS_tagElemLista {
 
-	void * pValor ;
-		/* Ponteiro para o valor contido no elemento */
+		void * pValor ;
+			/* Ponteiro para o valor contido no elemento */
 	
-	struct tagElemLista * pAnt ;
-		/* Ponteiro para o elemento predecessor */
+		struct LIS_tagElemLista * pAnt ;
+			/* Ponteiro para o elemento predecessor */
 	
-	struct tagElemLista * pProx ;
-		/* Ponteiro para o elemento sucessor */
+		struct LIS_tagElemLista * pProx ;
+			/* Ponteiro para o elemento sucessor */
 
-}LIS_tpElemLista;
+	} LIS_tpElemLista ;
 
 
 /***************************************************************************
@@ -63,15 +63,15 @@ typedef struct LIS_tagElemLista {
 *
 ***************************************************************************/
 
-	struct LIS_tagLista {
+	typedef struct LIS_tagLista {
 	
-		LIS_tagElemLista * pOrigemLista ;
+		struct LIS_tagElemLista * pOrigemLista ;
 			/* Ponteiro para a origem da lista */
 	
-		LIS_tagElemLista * pFimLista ;
+		struct LIS_tagElemLista * pFimLista ;
 			/* Ponteiro para o final da lista */
 	
-		LIS_tagElemLista * pElemCorr ;
+		struct LIS_tagElemLista * pElemCorr ;
 			/* Ponteiro para o elemento corrente da lista */
 	
 		unsigned int numElem ;
@@ -80,7 +80,7 @@ typedef struct LIS_tagElemLista {
 		void (*ExcluirValor)(void * pValor) ;
 			/* Ponteiro para a função de destruição do valor contido em um elemento */
 	
-	};
+	} LIS_tpLista ;
 
 
 
@@ -103,7 +103,7 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 
 	LIS_tpCondRet LIS_CriarLista ( LIS_tppLista * refLista , void(*ExcluirValor)(void * pDado) )
 	{
-		*refLista = (LIS_tagLista*)malloc(sizeof(LIS_tagLista));
+		*refLista = (LIS_tpLista*)malloc(sizeof(LIS_tpLista));
 	
 		if ( *refLista == NULL )
 			return LIS_CondRetFaltouMemoria ;

@@ -37,16 +37,16 @@
 
 /********************* Diretivas de Pré-Processamento *********************/
 
-#ifndef CELULA_ 
-#define CELULA_
+	#ifndef CELULA_ 
+	#define CELULA_
 
 
 
 /******************* Declarações exportadas pelo módulo *******************/
 
-/* Tipo ponteiro para uma célula */
+	/* Tipo ponteiro para uma célula */
 
-typedef struct CEL_tagCelula* CEL_tppCelula ;
+	typedef struct CEL_tagCelula* CEL_tppCelula ;
 
 
 

@@ -2,7 +2,8 @@
 *
 *	$MCI Módulo de implementação: Módulo Matriz Genérica
 *
-*	Arquivo gerado:              MAT
+*	Arquivo gerado:				 matriz.c
+*	Letras identificadoras:		 MAT
 *
 *	Nome da base de software:    Exemplo de teste automatizado
 *	Arquivo da base de software: ArcaboucoTeste.lib
@@ -31,6 +32,31 @@
 
 /***************** Declarações encapsuladas pelo módulo ******************/
 
+/*************************************************************************
+*
+*	$TC Tipo de dados: MAT Elemento da matriz
+*
+*	$ED Descrição do tipo
+*		Elemento da matriz, que armazena 4 ponteiros para seus vizinhos, 
+*		e um ponteiro para void.
+*
+*************************************************************************/
+
+	typedef struct MAT_tagElemMatriz{
+
+		struct MAT_tagElemMatriz* pCima ;
+					/*Ponteiro para o vizinho de cima*/
+		struct MAT_tagElemMatriz* pBaixo ;
+					/*Ponteiro para o vizinho de baixo*/
+		struct MAT_tagElemMatriz* pEsq	;
+					/*Ponteiro para o vizinho a esquerda*/
+		struct MAT_tagElemMatriz* pDir	;
+					/*Ponteiro para o vizinho a direita*/
+		void* pDado ;
+					/*Ponteiro para o dado apontado pelo elemento*/
+
+	} MAT_tpElemMatriz ;
+
 
 /**************************************************************************
 *
@@ -41,10 +67,12 @@
 *
 **************************************************************************/
 
-	struct MAT_tagMatriz{
+	typedef struct MAT_tagMatriz{
 
-		void* m ;
-				/*Ponteiro para a matriz*/
+		struct MAT_tagElemMatriz* pElemInicial ;
+				/*Ponteiro para o elemento inicial*/
+		struct MAT_tagElemMatriz* pElemCorrente ;
+				/*Ponteiro para o elemento corrente*/
 		void (*ExcluirDado) (void* pDado) ;
 				/*Ponteiro para a função de destruição do valor 
 				contido em um elemento*/
@@ -53,7 +81,7 @@
 		int colunas;
 				/*indica o número de colunas da matriz*/
 
-	};
+	} MAT_tpMatriz;
 
 
 /************* Código das funções exportadas pelo módulo **************/
@@ -65,20 +93,73 @@
 
 	MAT_tpCondRet MAT_criaMatriz ( MAT_tppMatriz* refMatriz, int linhas, int colunas,
 												 void (*ExcluirDado) (void* pDado) ){
+		
+		MAT_tpElemMatriz** vetAux ; //vetor auxiliar para armazenar os elementos
+		int i, j ;
 
-		*refMatriz = (MAT_tagMatriz*) malloc (sizeof ( struct MAT_tagMatriz) );  //aloca espaço para a cabeça da matriz
-		(*refMatriz)->m = (void*) malloc (sizeof ( linhas * colunas ) + 4 ); //aloca espaço para a matriz em si
+		//Aloca a cabeça da matriz
+		*refMatriz = (MAT_tpMatriz*) malloc ( sizeof ( MAT_tpMatriz ) ) ;
+		
+		if ( *refMatriz == NULL )
+			return MAT_CondRetFaltouMemoria;
 
-		if ( *refMatriz == NULL ){
+		//Alocação do vetor auxiliar
+		vetAux = (MAT_tpElemMatriz **) malloc 
+							( sizeof ( MAT_tpElemMatriz*) * linhas * colunas );
+		if ( vetAux == NULL ) {
+			free ( *refMatriz );
+			return MAT_CondRetFaltouMemoria;
+		}
+	
+		/* Alocação dos elementos */
+		for (i=0; i < linhas*colunas; i++) {
+			vetAux[i] = (MAT_tpElemMatriz *) malloc ( sizeof(MAT_tpElemMatriz) );
+			if ( vetAux[i] == NULL ) { 
+				
+				for (j=0; j<i; j++) { // Libera tudo que tinha sido alocado
+					free(vetAux[j]);
+				}
+				
+				free(*refMatriz);
+				
+				return MAT_CondRetFaltouMemoria;
+			}
 
-			return MAT_CondRetFaltouMemoria ;
-
+			vetAux[i]->pDado = NULL; // Zera os ponteiros para lista
 		}
 
-		//inicializa a cabeça da matriz
-		(*refMatriz)->linhas = linhas ;
-		(*refMatriz)->colunas = colunas ;
-		(*refMatriz)->ExcluirDado = ExcluirDado ;
+		/* Ligar os ponteiros dos elementos */
+		for (i=0; i < linhas; i++) {
+
+			for (j=0; j < colunas; j++) {
+					/*Inicializa pValor*/
+				vetAux[i*linhas + j]->pDado = NULL;
+
+					/* Cima */
+				vetAux[i*linhas + j]->pCima = (i > 0) ? 
+					vetAux[(i-1)*linhas + j] : NULL;
+
+					/* Direita */
+				vetAux[i*linhas + j]->pDir = (j < colunas-1) ? 
+					vetAux[i*linhas + (j+1)] : NULL;
+
+					/* Baixo */
+				vetAux[i*linhas + j]->pBaixo = (i < linhas-1) ? 
+					vetAux[(i+1)*linhas + j] : NULL;
+
+					/* Esquerda */
+				vetAux[i*linhas + j]->pEsq = (j > 0) ? 
+					vetAux[i*linhas + (j-1)] : NULL;
+			}
+		}
+
+		//Inicializa a cabeça da matriz
+		(**refMatriz).pElemInicial = (**refMatriz).pElemCorrente = vetAux[0];
+		(**refMatriz).colunas = colunas ;
+		(**refMatriz).linhas = linhas ;
+		(**refMatriz).ExcluirDado = ExcluirDado ;
+
+		free ( vetAux ) ;
 
 		return MAT_CondRetOK ;
 	}
@@ -89,47 +170,11 @@
 *  Função: MAT Destroi Matriz
 */
 
-	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz pMatriz ){
-
-		int i , j ;
-		
-		if ( MAT_confereVazia (pMatriz) == MAT_CondRetMatrizNVazia ){
-			
-			for( i=0, j=0; i < pMatriz->linhas, j < pMatriz->colunas; i++, j++ ){
-			
-				pMatriz->ExcluirDado( pMatriz->m[i][j] );
-			}
-
-			free ( pMatriz->m );
-			free ( pMatriz ) ;
-		}
-
-		else {
-
-			free ( pMatriz->m ) ;
-			free ( pMatriz ) ;
-		} 
-		
-		return MAT_CondRetOK ;
-	}
-
 
 /***********************************************************************
 *
-*  Função: MAT Esvazia Matriz
+*	Função: MAT Andar corrente
 */
-
-	MAT_tpCondRet MAT_esvaziaMatriz ( MAT_tppMatriz pMatriz ){
-
-		int i , j ;
-		
-		for ( i=0, j=0; i < pMatriz->linhas, j < pMatriz->colunas; i++, j++ ){
-			
-				pMatriz->ExcluirDado ( pMatriz->m[i][j] ) );
-		}
-
-		return MAT_CondRetOK ;
-	}
 
 
 /***********************************************************************
@@ -137,51 +182,23 @@
 *  Função: MAT Insere Dado
 */
 
-	MAT_tpCondRet MAT_insereDado ( MAT_tppMatriz pMatriz, int linha, int coluna, void* pDado){
-
-		pMatriz->m[linha][coluna] = pDado ;
-	}
+	
+/***********************************************************************
+*
+*	Função: MAT Obter Valor Corrente
+*/
 
 
 /***********************************************************************
 *
-*  Função: MAT Confere Vazia
+*	Função: MAT Remove Valor Corrente
 */
-
-	MAT_tpCondRet MAT_confereVazia ( MAT_tppMatriz pMatriz ){
-
-		int i, j ;
-
-		for ( i=0, j=0; i < pMatriz->linhas, j < pMatriz->colunas; i++, j++ ){
-
-			if ( pMatriz->m[i][j] != NULL )
-				return MAT_CondRetMatrizNVazia ;
-		} 
-
-		return MAT_CondRetMatrizVazia ;
-	}
 
 
 /***********************************************************************
 *
-*  Função: MAT Obter Linhas
+*  Função: MAT Reseta Matriz (esvazia)
 */
 
-	MAT_tpCondRet MAT_obterLinhas ( MAT_tppMatriz pMatriz, int* refLinhas ){
 
-		*refLinhas = pMatriz->linhas ;
-
-		return MAT_CondRetOK ;
-	}
-
-
-/***********************************************************************
-*
-*  Função: MAT Obter Colunas
-*/
-	MAT_tpCondRet MAT_obterColunas ( MAT_tppMatriz pMatriz, int* refLinhas ){
-
-		*refLinhas = pMatriz->colunas;
-
-		return MAT_CondRetOK ;
-	}
+/********** Fim do módulo de implementação: Módulo matriz **********/
