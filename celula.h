@@ -70,7 +70,7 @@
 
 /***********************************************************************
 *
-*	$FC Função:	ARV Cria Célula
+*	$FC Função:	CEL Cria Célula
 *
 *	$ED Descrição da função
 *		Cria uma nova célula com todos os campos nulos.

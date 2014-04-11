@@ -200,31 +200,34 @@
 *	Função: MAT Percorre Matriz
 */
 
-	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int direcao ){
+	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int linha, int coluna ){
 	
-		switch ( direcao ){
-		
-			case 0:		//Cima
-				return (pMatriz->pElemCorrente->pCima != NULL) ?
-					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pCima,
-					MAT_CondRetOK : MAT_CondRetFronteira;
-		
-			case 1:		//Direita
-				return (pMatriz->pElemCorrente->pDir != NULL) ?
-					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pDir,
-					MAT_CondRetOK : MAT_CondRetFronteira;
-		
-			case 2:		//Baixo
-				return (pMatriz->pElemCorrente->pBaixo != NULL) ?
-					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pBaixo,
-					MAT_CondRetOK : MAT_CondRetFronteira;
+		if ( (linha != 0) || (coluna != 0) ){	//Se a posição (linha,coluna) não é a inicial
 
-			case 3:		//Esquerda
-				return (pMatriz->pElemCorrente->pEsq != NULL) ?
-					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pEsq,
-					MAT_CondRetOK : MAT_CondRetFronteira;		
+			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
+
+			//Anda com o corrente até a linha correta
+			while ( linha != 0 ){
+				
+				pMatriz->pElemCorrente = pMatriz->pElemCorrente->pBaixo ;
+				linha--;
+			}
+
+			//Anda com o corrente até a coluna correta
+			while ( coluna != 0 ){
+					
+				pMatriz->pElemCorrente = pMatriz->pElemCorrente->pDir ;
+				coluna--;
+			}
+
 		}
 
+		else{	//Se a posição (linha,coluna) é a inicial
+
+			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
+			
+			return MAT_CondRetOK ;
+		}
 	}
 
 
@@ -291,4 +294,4 @@
 		return MAT_CondRetOK;
 	}
 
-/********** Fim do módulo de implementação: Módulo matriz **********/
+/********** Fim do módulo de implementação: Módulo Matriz **********/

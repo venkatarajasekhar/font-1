@@ -22,6 +22,7 @@
 *		Implementa uma matriz genérica.
 *		Podem existir n matrizes em operação simultaneamente.
 *		A matriz está vazia após sua criação.
+*		A posição inicial da matriz é (0,0).
 *		A matriz é homogênea quanto ao tipo de dado que armazena.
 *		Os ponteiros para os dados são copiados para elementos da matriz.
 *		Não é copiado o valor apontado por estes ponteiros.
@@ -134,13 +135,12 @@
 *	$FC Função: MAT Percorre Matriz
 *
 *	$ED Descrição da função
-*		Anda com o elemento corrente na direção escolhida.
-*		As direções são Cima, Baixo, Esquerda e Direita.
+*		Anda com o elemento corrente para a posição linha x coluna.
 *
 *	$EP Parâmetros
-*		pMatriz	-	Ponteiro para a matriz
-*		direcao	-	Inteiro representando a direção do movimento. 
-*					0 = Cima, 1 = Direta, 2 = Baixo, 3 = Esquerda.
+*		pMatriz	- Ponteiro para a matriz
+*		linha	- Inteiro que indica a linha
+*		coluna	- Inteiro que indica a coluna
 *
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
@@ -148,15 +148,17 @@
 *
 *   $AE Assertivas de entrada
 *		pMatriz aponta para uma matriz válida.
-*		direcao varia entre [0,3].
+*		linha e coluna são menores ou iguais as dimensões
+*		da matriz.
 *
 *   $AS Assertivas de saída 
-*		O elemento corrente da matriz é o elemento apontado
-*		pelo corrente anterior na direção indicada.
+*		Se Ok, o elemento corrente da matriz é o elemento na posição
+*		linha x coluna.
+*		Senão, a matriz não é alterada.
 *
 ***********************************************************************/
 	
-	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int direcao );
+	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int linha, int coluna );
 
 
 /***********************************************************************
