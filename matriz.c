@@ -169,12 +169,63 @@
 *
 *  Função: MAT Destroi Matriz
 */
+	
+	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz pMatriz ){
+	
+		MAT_tpElemMatriz *pElemAux;
+
+		while ( pMatriz->pElemInicial != NULL ){	//Se existe mais uma linha
+		
+			pMatriz->pElemCorrente = pMatriz->pElemInicial ;		//Corrente aponta para a primeira coluna
+			pMatriz->pElemInicial = pMatriz->pElemInicial->pBaixo ;	//Inicial aponta para a próxima linha
+
+			while ( pMatriz->pElemCorrente != NULL ){	//Se existe mais uma coluna
+			
+				pElemAux = pMatriz->pElemCorrente ;			//Salva elemento corrente em aux
+				pMatriz->pElemCorrente = pElemAux->pDir ;	//Corrente aponta para próxima coluna
+				pMatriz->ExcluirDado ( pElemAux->pDado );	//Libera antigo dado corrente
+				free ( pElemAux );							//Libera antigo elemento corrente
+			
+			}
+		}
+
+		free ( pMatriz );	//Libera Matriz
+
+		return MAT_CondRetOK;
+	}
 
 
 /***********************************************************************
 *
-*	Função: MAT Andar corrente
+*	Função: MAT Percorre Matriz
 */
+
+	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int direcao ){
+	
+		switch ( direcao ){
+		
+			case 0:		//Cima
+				return (pMatriz->pElemCorrente->pCima != NULL) ?
+					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pCima,
+					MAT_CondRetOK : MAT_CondRetFronteira;
+		
+			case 1:		//Direita
+				return (pMatriz->pElemCorrente->pDir != NULL) ?
+					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pDir,
+					MAT_CondRetOK : MAT_CondRetFronteira;
+		
+			case 2:		//Baixo
+				return (pMatriz->pElemCorrente->pBaixo != NULL) ?
+					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pBaixo,
+					MAT_CondRetOK : MAT_CondRetFronteira;
+
+			case 3:		//Esquerda
+				return (pMatriz->pElemCorrente->pEsq != NULL) ?
+					pMatriz->pElemCorrente = pMatriz->pElemCorrente->pEsq,
+					MAT_CondRetOK : MAT_CondRetFronteira;		
+		}
+
+	}
 
 
 /***********************************************************************
@@ -182,23 +233,62 @@
 *  Função: MAT Insere Dado
 */
 
+	MAT_tpCondRet MAT_insereDado ( MAT_tppMatriz pMatriz, void* pDado){
 	
+		//Se elemento corrente já aponta para um dado
+		if ( pMatriz->pElemCorrente->pDado != NULL )
+			
+			pMatriz->ExcluirDado ( pMatriz->pElemCorrente->pDado ); //Desaloca esse dado
+		
+		else
+	
+			pMatriz->pElemCorrente->pDado = pDado;
+
+		return MAT_CondRetOK;
+	}
+	
+
 /***********************************************************************
 *
 *	Função: MAT Obter Valor Corrente
 */
 
+	MAT_tpCondRet MAT_obterValorCorrente ( MAT_tppMatriz pMatriz, void** refDado){
+	
+		*refDado = pMatriz->pElemCorrente->pDado ;
+
+		return MAT_CondRetOK ;
+	}
+
 
 /***********************************************************************
 *
-*	Função: MAT Remove Valor Corrente
+*  Função: MAT Reseta Matriz
 */
 
+	MAT_tpCondRet MAT_resetaMatriz ( MAT_tppMatriz pMatriz ){
 
-/***********************************************************************
-*
-*  Função: MAT Reseta Matriz (esvazia)
-*/
+		MAT_tpElemMatriz *pElemAux, *pElemAux2;
 
+		pElemAux2 = pMatriz->pElemInicial ; //Salva Elemento Inicial
+
+		while ( pMatriz->pElemInicial != NULL ){	//Se existe mais uma linha
+		
+			pMatriz->pElemCorrente = pMatriz->pElemInicial ;		//Corrente aponta para a primeira coluna
+			pMatriz->pElemInicial = pMatriz->pElemInicial->pBaixo ;	//Inicial aponta para a próxima linha
+
+			while ( pMatriz->pElemCorrente != NULL ){	//Se existe mais uma coluna
+			
+				pElemAux = pMatriz->pElemCorrente->pDir ;				//Salva proxima coluna	
+				pMatriz->ExcluirDado ( pMatriz->pElemCorrente->pDado ); //Exclui dado da coluna atual
+				pMatriz->pElemCorrente->pDado = NULL ;
+				pMatriz->pElemCorrente = pElemAux->pDir ;				//Corrente aponta para a próxima coluna		
+			}
+		}
+
+		pMatriz->pElemCorrente = pMatriz->pElemInicial = pElemAux2 ;	//Corrente e Inicial apontam para o elemento inicial
+
+		return MAT_CondRetOK;
+	}
 
 /********** Fim do módulo de implementação: Módulo matriz **********/

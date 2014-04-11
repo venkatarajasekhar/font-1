@@ -61,14 +61,11 @@
 		MAT_CondRetOK = 0 ,
 				//Concluiu corretamente 
 		
-		MAT_CondRetMatrizVazia = 1 ,
-				// A matriz não contém elementos
-		
-		MAT_CondRetMatrizNVazia = 2 ,
-				// A matriz contém elementos
+		MAT_CondRetFronteira = 1 ,
+				//Movimento que leva para fora da matriz
 
-		MAT_CondRetFaltouMemoria = 3
-				// Faltou memória ao tentar criar um elemento da matriz
+		MAT_CondRetFaltouMemoria = 2
+				//Faltou memória ao tentar criar um elemento da matriz
 
 	} MAT_tpCondRet ;
 
@@ -134,28 +131,32 @@
 
 /***********************************************************************
 *
-*	$FC Função: MAT Esvazia Matriz
+*	$FC Função: MAT Percorre Matriz
 *
 *	$ED Descrição da função
-*		Desaloca todos os dados apontados pelos elementos da matriz, que
-*		então apontam para NULL.
-*	
+*		Anda com o elemento corrente na direção escolhida.
+*		As direções são Cima, Baixo, Esquerda e Direita.
+*
 *	$EP Parâmetros
-*		pMatriz	- Ponteiro para a matriz a ser esvaziada.
-*	
+*		pMatriz	-	Ponteiro para a matriz
+*		direcao	-	Inteiro representando a direção do movimento. 
+*					0 = Cima, 1 = Direta, 2 = Baixo, 3 = Esquerda.
+*
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
+*		MAT_tpCondRetFronteira
 *
-*   $AE Assertivas de entrada 
-*		pMatriz aponta para uma matriz não vazia.
-*		
-* 
+*   $AE Assertivas de entrada
+*		pMatriz aponta para uma matriz válida.
+*		direcao varia entre [0,3].
+*
 *   $AS Assertivas de saída 
-*		A matriz apontada por pMatriz está vazia.
+*		O elemento corrente da matriz é o elemento apontado
+*		pelo corrente anterior na direção indicada.
 *
 ***********************************************************************/
-
-	MAT_tpCondRet MAT_esvaziaMatriz ( MAT_tppMatriz pMatriz );
+	
+	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int direcao );
 
 
 /***********************************************************************
@@ -163,14 +164,11 @@
 *	$FC Função: MAT Insere Dado
 *
 *	$ED Descrição da função
-*		Atribui o dado passado para o elemento na 
-*		posição [linha][coluna] da matriz. Se o elemento
-*		já aponta para um dado, este será desalocado.
+*		Atribui o dado passado para o elemento corrente da matriz. 
+*		Se o elemento já aponta para um dado, este será desalocado.
 *
 *	$EP Parâmetros
-*		pMatriz	- Ponteiro para a matriz cujo elemento será alterado
-*		linha 	- Indica a linha da matriz onde está o elemento
-*		coluna 	- Indica a coluna da matriz onde está o elemento	
+*		pMatriz	- Ponteiro para a matriz cujo elemento será alterado	
 *		pDado	- Ponteiro para o dado a ser apontado pelo elemento
 *
 *	$FV Valor retornado
@@ -178,134 +176,76 @@
 *
 *   $AE Assertivas de entrada 
 *		pMatriz aponta para uma matriz válida.
-*		linha é menor ou igual ao número de linhas da matriz.
-*		coluna é menor ou igual ao número de linhas da matriz.
 * 		pDado contem o dado que será inserido e é diferente de NULL.
 *
 *   $AS Assertivas de saída 
-*		O elemento na posição [linha][coluna] da matriz aponta para o
+*		O elemento na posição corrente da matriz aponta para o
 *		dado passado.
 *
 ***********************************************************************/
 
-	MAT_tpCondRet MAT_insereDado ( MAT_tppMatriz pMatriz, int linha, int coluna, void* pDado);
+	MAT_tpCondRet MAT_insereDado ( MAT_tppMatriz pMatriz, void* pDado);
 
 
 /***********************************************************************
 *
-*	$FC Função: MAT Confere Vazia
+*	$FC Função: MAT Obter Valor Corrente
 *
 *	$ED Descrição da função
-*		Confere se a matriz está vazia.
-*	
-*	$EP Parâmetros
-*		pMatriz	- Ponteiro para matriz a ser conferida
-*	
-*	$FV Valor retornado
-*		MAT_tpCondRetMatrizVazia
-*		MAT_tpCondRetMatrizNVazia
-*
-*   $AE Assertivas de entrada 
-*		pMatriz aponta para uma matriz válida.
-* 
-*   $AS Assertivas de saída 
-*		A matriz não é alterada.
-*
-***********************************************************************/
-	
-	MAT_tpCondRet MAT_confereVazia ( MAT_tppMatriz pMatriz );
-
-
-/***********************************************************************
-*
-*	$FC Função: MAT Obter Linhas
-*
-*	$ED Descrição da função
-*		Retorna por referência o número de linhas da matriz.
+*		Retorna por referência um ponteiro para o dado apontado 
+*		pelo elemento corrente da matriz.
 *		
 *	$EP Parâmetros
-*		pMatriz		- Ponteiro para a matriz
-*		refLinhas	- referência da variável que armazenará 
-*					  o número de linhas
+*		pMatriz	- Ponteiro para a matriz.	
+*		refDado	- Referência para o dado.
 *
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
 *
 *   $AE Assertivas de entrada 
 *		pMatriz aponta para uma matriz válida.
-*		refLinhas aponta para um inteiro válido.
+* 		refDado é do mesmo tipo armazenado na matriz.
 * 
 *   $AS Assertivas de saída 
 *		A matriz não é alterada.
-*		refNum aponta para um inteiro com o número de linhas da 
-*		matriz.
+*		refDado aponta para o dado contido no elemento corrente
+*		da matriz.
 *
 ***********************************************************************/
 
-	MAT_tpCondRet MAT_obterLinhas ( MAT_tppMatriz pMatriz, int* refLinhas ) ;
-
+	MAT_tpCondRet MAT_obterValorCorrente ( MAT_tppMatriz pMatriz, void** refDado);
+	
 
 /***********************************************************************
 *
-*	$FC Função: MAT Obter Colunas
+*	$FC Função: MAT Reseta Matriz
 *
 *	$ED Descrição da função
-*		Retorna por referência o número de colunas da matriz.
-*		
+*		Desaloca todos os dados apontados pelos elementos da matriz, que
+*		então apontam para NULL.
+*	
 *	$EP Parâmetros
-*		pMatriz		- Ponteiro para a matriz
-*		refColunas	- referência da variável que armazenará 
-*					  o número de linhas
-*
+*		pMatriz	- Ponteiro para a matriz a ser resetada.
+*	
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
 *
 *   $AE Assertivas de entrada 
-*		refColunas aponta para um inteiro válido.
-*		pMatriz aponta para uma matriz válida.
+*		pMatriz é um ponteiro para uma matriz válida.
+*		Os elementos da matriz apontam para dados.
 * 
 *   $AS Assertivas de saída 
-*		A matriz não é alterada.
-*		refNum aponta para um inteiro com o número de colunas da 
-*		matriz.
+*		Os elementos da matriz apontada por pMatriz 
+*		apontam para NULL.
+*		O ponteiro para o elemento corrente aponta
+*		para o elemento inicial.
 *
 ***********************************************************************/
-	
-	MAT_tpCondRet MAT_obterColunas ( MAT_tppMatriz pMatriz, int* refLinhas ) ;
 
+	MAT_tpCondRet MAT_resetaMatriz ( MAT_tppMatriz pMatriz );
+	
 
 
 /*************Fim do módulo de definição: Módulo Valor****************/
 
 #endif
-
-/***********************************************************************
-*
-*	$FC Função: MAT Obter Dado
-*
-*	$ED Descrição da função
-*		Retorna por referência um ponteiro para o dado apontado 
-*		pelo elemento [linha][coluna] da matriz.
-*		
-*	$EP Parâmetros
-*		linha 	- indica a linha da matriz onde está o elemento
-*		coluna 	- indica a coluna da matriz onde está o elemento	
-*		refDado	- referência para o dado 
-*
-*	$FV Valor retornado
-*		MAT_tpCondRetOK
-*
-*   $AE Assertivas de entrada 
-*		linha é menor ou igual ao número de linhas da matriz.
-*		coluna é menor ou igual ao número de linhas da matriz.
-* 		refDado é do mesmo tipo armazenado na matriz.
-*		A matriz existe.
-* 
-*   $AS Assertivas de saída 
-*		A matriz não é alterada.
-*		refDado aponta para o dado contido no elemento [linha][coluna]
-*		da matriz.
-*
-***********************************************************************
-
-	MAT_tpCondRet MAT_obterDado ( int linha, int coluna, void* refDado);*/
