@@ -50,7 +50,7 @@
 *	Função: VAL Cria Valor
 */
 
-	VAL_tpCondRet VAL_criaValor ( VAL_tppValor* refValor ){
+	VAL_tpCondRet VAL_criaValor ( VAL_tppValor* refValor, int numCelulas ){
 	
 		*refValor = (VAL_tpValor*) malloc ( sizeof(VAL_tpValor) );
 
@@ -59,7 +59,7 @@
 		}
 
 		(*refValor)->resolvido = 0 ;
-		(*refValor)->num_celulas = NULL ;
+		(*refValor)->num_celulas = numCelulas ;
 
 		return VAL_CondRetOK ;
 	

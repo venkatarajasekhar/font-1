@@ -72,14 +72,17 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *		Cria um novo valor.
 *
 *	$EP Parâmetros
-*		refValor	  -	Referência para o valor criado.
-*
+*		refValor	-	Referência para o valor criado.
+*		numCelulas	-	Inteiro representando o número de células
+*						a que o valor se refere.
+*		
 *	$FV Valor retornado
 *		VAL_tpCondRetOK
 *		VAL_tpCondRetFaltouMemoria
 *
 *   $AE Assertivas de entrada 
 *		refValor referencia um ponteiro livre para um novo valor.
+*		numCelulas é um inteiro maior que 0.
 *		
 *	$AS Assertivas de saída
 *		Se OK, refValor apontará para o valor criado.
@@ -87,7 +90,7 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *
 ***********************************************************************/
 
-	VAL_tpCondRet VAL_criaValor ( VAL_tppValor* refValor ) ;
+	VAL_tpCondRet VAL_criaValor ( VAL_tppValor* refValor, int numCelulas ) ;
 
 
 /***********************************************************************
