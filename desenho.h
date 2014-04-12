@@ -37,7 +37,7 @@
 
 /****************** Declarações exportadas pelo módulo *******************/
 
-
+	typedef void(*ExcluirValor)(void * pDado) ExcluirValor;
 
 
 /*************************************************************************
