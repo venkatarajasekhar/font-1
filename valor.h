@@ -38,7 +38,7 @@
 
 
 
-/******************* Declarações exportadas pelo módulo *******************/
+/***************** Declarações exportadas pelo módulo *****************/
 
 /* Tipo referência para um valor */
 

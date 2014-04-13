@@ -128,7 +128,7 @@
 *	Função:	CEL Altera Estado Correto
 */
 
-	CEL_tpCondRet CEL_alteraestadoCorreto ( CEL_tppCelula pCelula, int valor ){
+	CEL_tpCondRet CEL_alteraEstadoCorreto ( CEL_tppCelula pCelula, int valor ){
 		
 		pCelula->estado_correto = valor;
 

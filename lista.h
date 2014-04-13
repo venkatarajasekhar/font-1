@@ -102,6 +102,15 @@ typedef struct LIS_tagLista* LIS_tppLista ;
 *		LIS_CondRetOK
 *		LIS_CondRetFaltouMemoria
 *
+*   $AE Assertivas de entrada 
+*		refLista referencia um ponteiro livre para uma nova lista.
+*		O ponteiro para função ExcluirValor deve estar de acordo com
+*		a liberação de memória desejada. 
+*
+*   $AS Assertivas de saída 
+*		Se OK, refLista apontará para uma lista criada corretamente
+*		Senão, refLista apontará para um ponteiro nulo.
+*
 ***************************************************************************/
 
 LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void * pDado) );
@@ -120,6 +129,14 @@ LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void
 *
 *	$FV Valor retornado
 *		LIS_CondRetOK
+*
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida.
+*		refNum deve apontar para um inteiro válido.
+* 
+*   $AS Assertivas de saída 
+*		refNum aponta para um inteiro com o número de elementos da 
+*		lista. 
 *
 ***************************************************************************/
 
@@ -141,6 +158,12 @@ LIS_tpCondRet LIS_ObterNumElem ( LIS_tppLista pLista, int * refNum ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista que existe.
+* 
+*   $AS Assertivas de saída 
+*		A lista passada foi liberada corretamente.
+*
 ***************************************************************************/
 
 LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
@@ -158,6 +181,12 @@ LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
 *
 *	$FV Valor retornado
 *		LIS_CondRetOK
+*
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida que deve ser esvaziada.
+* 
+*   $AS Assertivas de saída 
+*		pLista aponta para a mesma lista, porém sem elementos.
 *
 ***************************************************************************/
 
@@ -181,6 +210,15 @@ LIS_tpCondRet LIS_EsvaziarLista ( LIS_tppLista pLista ) ;
 *		LIS_CondRetOK
 *		LIS_CondRetFaltouMemoria
 *
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida.
+*		pValor contem o valor que será inserido e é diferente de NULL.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, o elemento foi inserido com sucesso e o corrente passa
+*		a ser o novo elemento.
+*		Senão, o estado original da lista é inalterado.
+*
 ***************************************************************************/
 
 LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
@@ -202,6 +240,15 @@ LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetFaltouMemoria
+*
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida.
+*		pValor contem o valor que será inserido e é diferente de NULL.
+*
+*   $AS Assertivas de saída 
+*		Se OK, o elemento foi inserido com sucesso e o corrente passa
+*		a ser o novo elemento.
+*		Senão, o estado original da lista é inalterado.
 *
 ***************************************************************************/
 
@@ -225,6 +272,15 @@ LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) ;
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
 *
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida não vazia.
+*		O elemento corrente deve ser o elemento que será excluído.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, o elemento corrente foi excluído e as assertivas 
+*		estruturais da lista mantêm-se válidas.
+*		Senão, o estado original da lista é inalterado.
+*
 ***************************************************************************/
 
 LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
@@ -245,6 +301,16 @@ LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
 *
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida não vazia.
+*		refValor é uma referência válida para ponteiro do tipo
+*		armazenado.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, refValor referencia o valor armazenado.
+*		Senão, refValor é inalterado.
+*		Em ambos os casos a lista se mantém inalterada.
+*
 ***************************************************************************/
 
 LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) ;
@@ -264,6 +330,13 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
 *
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida não vazia.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, o corrente da lista aponta para o primeiro elemento.
+*		Senão, o estado original da lista é inalterado.
+*
 ***************************************************************************/
 
  LIS_tpCondRet LIS_IrInicioLista ( LIS_tppLista pLista ) ;
@@ -282,6 +355,13 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
+*
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida não vazia.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, o corrente da lista aponta para o último elemento.
+*		Senão, o estado original da lista é inalterado.
 *
 ***************************************************************************/
 
@@ -308,6 +388,19 @@ LIS_tpCondRet LIS_IrFinalLista ( LIS_tppLista pLista ) ;
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
 *		LIS_CondRetFimLista
+*
+*   $AE Assertivas de entrada 
+*		pLista aponta para a lista válida.
+*		numElem deve ser um inteiro definido corretamente de acordo
+*		com a descrição da função.
+* 
+*   $AS Assertivas de saída 
+*		Se OK, o elemento corrente será redefinido de acordo com
+*		o parâmetro numElem.
+*		Se alcançou a fronteira, o corrente será o último ou o primeiro
+*		elemento da lista, caso numElem seja positivo ou negativo
+*		respectivamente.
+*		Senão, a lista está vazia.
 *
 ***************************************************************************/
 

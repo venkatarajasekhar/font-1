@@ -88,7 +88,11 @@
 		MAT_tpCondRet retMat ;	//retorno das funções do módulo matriz
 		LIS_tpCondRet retLis ;	//retorno das funções do módulo lista
 		int retInitMat ;		//retorno da função auxiliar initMatriz
-		int i, j;
+		int i;
+
+		//Se já existe um desenho
+		if ( pDesenho != NULL )
+			return DES_CondRetDesenhoExistente;
 
 		//Aloca desenho
 		pDesenho = (DES_tpDesenho*) malloc ( sizeof(DES_tpDesenho) ) ;
@@ -194,10 +198,41 @@
 
 /************************************************************************
 *
-*  Função: DES Modifica Célula
+*  Função: DES Destroi Desenho
 */
 
-	DES_tpCondRet DES_modificaCelula ( int linha, int coluna, char estado ){
+	DES_tpCondRet DES_destroiDesenho( void ){
+		
+		int linhas, colunas;
+
+		//Obtem as dimensões do desenho
+		MAT_obterLinhas ( pDesenho->matriz, &linhas );
+		MAT_obterColunas ( pDesenho->matriz, &colunas );
+
+		//Destroi matriz
+		MAT_destroiMatriz ( pDesenho->matriz );
+
+		//Desaloca as listas dos vetores de listas de valores
+		desalocaVetListas ( pDesenho->listaValoresH, linhas );
+		desalocaVetListas ( pDesenho->listaValoresV, colunas );
+
+		//Libera os vetores de listas e o desenho
+		free (pDesenho->listaValoresV);
+		free (pDesenho->listaValoresH);
+		free (pDesenho);
+
+		pDesenho = NULL;
+
+		return DES_CondRetOK;
+	}
+
+
+/************************************************************************
+*
+*  Função: DES Modifica Célula Correto
+*/
+
+	DES_tpCondRet DES_modificaCelulaCorreto ( int linha, int coluna, char estado ){
 		
 		CEL_tpCondRet retCel;
 		MAT_tpCondRet retMat;
@@ -221,6 +256,42 @@
 		else if ( estado == NULL ){
 			
 			retCel = CEL_alteraEstadoCorreto ( celula, NULL ) ;
+			return DES_CondRetOK ;
+		}
+		else
+			return DES_CondRetEstadoInvalido;
+	}
+
+
+/************************************************************************
+*
+*  Função: DES Modifica Célula Atual
+*/
+
+	DES_tpCondRet DES_modificaCelulaAtual ( int linha, int coluna, char estado){
+	
+		CEL_tpCondRet retCel;
+		MAT_tpCondRet retMat;
+		CEL_tppCelula celula = NULL;
+		
+		retMat = MAT_percorreMatriz ( pDesenho->matriz, linha-1, coluna-1 );
+
+		//Se o estado é marcada
+		if ( estado == 'm' ){
+		
+			retCel = CEL_alteraEstadoAtual ( celula, 1 ) ;
+			return DES_CondRetOK ;
+		}
+		//Se o estado é desmarcada
+		else if ( estado == 'd' ){
+			
+			retCel = CEL_alteraEstadoAtual ( celula, 2 ) ;
+			return DES_CondRetOK ;
+		}
+
+		else if ( estado == NULL ){
+			
+			retCel = CEL_alteraEstadoAtual ( celula, NULL ) ;
 			return DES_CondRetOK ;
 		}
 		else
@@ -319,6 +390,11 @@
 						break; //Sai do loop de verificação
 					}
 				}
+				
+				//Se existir uma célula nula, os valores não podem ser computados corretamente
+				else if ( estado == NULL ){
+					return DES_CondRetCelulaNula;
+				}
 				//Se estado for desmarcada, segue para a próxima coluna
 			}
 		}
@@ -401,17 +477,222 @@
 
 /************************************************************************
 *
+*  Função: DES Confere Solução dos Valores
+*/
+
+	DES_tpCondRet DES_confereSolucaoValores ( void ){
+
+		int i, j, linhas, colunas, count_cel = 0;
+		int num_celulas, estado_atual, estado_correto;
+
+		VAL_tppValor valor;
+		CEL_tppCelula celula;
+
+		LIS_tpCondRet retLis ;
+
+		//Obtem as dimensões da matriz
+		MAT_obterLinhas ( pDesenho->matriz, &linhas );
+		MAT_obterColunas ( pDesenho->matriz, &colunas );
+
+	/*Confere valores horizontais*/
+
+		//Para cada linha
+		for ( i=0 ; i<linhas ; i++ ){
+		
+			//Vai pro início da lista de valores da linha i
+			LIS_IrInicioLista ( pDesenho->listaValoresH[i] );
+
+		/*Descobre o número de células do valor atual (nova linha)*/
+
+			//Obtem o valor corrente da lista
+			LIS_ObterValorCorrente ( pDesenho->listaValoresH[i], (void**)&valor );
+
+			//Obtem o número de células desse valor
+			VAL_obtemNumeroCelulas ( valor, &num_celulas );
+
+			//Para cada coluna
+			for ( j=0 ; j<colunas ; j++ ){
+
+		/*Descobre o número de células do valor atual (valor incorreto)*/		
+
+				//Obtem o valor corrente da lista
+				LIS_ObterValorCorrente ( pDesenho->listaValoresH[i], (void**)&valor );
+
+				//Obtem o número de células desse valor
+				VAL_obtemNumeroCelulas ( valor, &num_celulas );
+		
+		/*Obtem os estados da celula*/
+				
+				//Vai pra posição (i,j) da matriz
+				MAT_percorreMatriz ( pDesenho->matriz, i, j );
+
+				//Obtem a célula da posição (i,j)
+				MAT_obterValorCorrente ( pDesenho->matriz, &celula );
+
+				//Obtem os estados da célula
+				CEL_obtemEstadoAtual ( celula, &estado_atual );
+				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+
+				/*Se a célula estiver marcada*/
+				if ( estado_atual == 1 ){
+					
+					//Se ela estiver marcada corretamente
+					if ( estado_atual == estado_correto ){
+						
+						//Contador de células marcadas +1
+						count_cel++;
+					}
+
+					//Se não estiver marcada corretamente
+					
+					//Marca o valor atual como não resolvido
+					VAL_defineSolucao ( valor, 0 );
+			
+					//Zera contador
+					count_cel = 0;
+
+					//Avança pro próximo valor
+					retLis = LIS_PercorreLista ( pDesenho->listaValoresH[i], 1);
+					//Se chegou ao fim da lista de valores dessa linha
+					if ( retLis == LIS_CondRetFimLista ){
+						break;		//Segue para a próxima linha
+					}
+				}
+
+				/*Se a célula não estiver marcada*/
+				else if ( estado_atual == 2 ){
+
+					//Se quantidade de células marcadas é igual a do valor
+					if ( count_cel == num_celulas ){
+						
+						//Define o valor como resolvido
+						VAL_defineSolucao ( valor, 1 );
+
+						//Zera contador
+						count_cel = 0 ;
+
+						//Avança pro próximo valor
+						retLis = LIS_PercorreLista ( pDesenho->listaValoresH[i], 1);
+						//Se chegou ao fim da lista de valores dessa linha
+						if ( retLis == LIS_CondRetFimLista ){
+							break;		//Segue para a próxima linha
+						}
+					}
+					//Se count_cell != num_celulas, segue para a próxima célula
+				}
+			}
+		}
+
+	/*Confere valores verticais*/
+
+		//Para cada coluna
+		for ( j=0 ; j<colunas ; j++ ){
+		
+			//Vai pro início da lista de valores da linha i
+			LIS_IrInicioLista ( pDesenho->listaValoresV[j] );
+
+		/*Descobre o número de células do valor atual (nova coluna)*/
+
+			//Obtem o valor corrente da lista
+			LIS_ObterValorCorrente ( pDesenho->listaValoresV[j], (void**)&valor );
+
+			//Obtem o número de células desse valor
+			VAL_obtemNumeroCelulas ( valor, &num_celulas );
+
+			//Para cada linha
+			for ( i=0 ; i<linhas ; i++ ){
+
+		/*Descobre o número de células do valor atual (valor incorreto)*/		
+
+				//Obtem o valor corrente da lista
+				LIS_ObterValorCorrente ( pDesenho->listaValoresH[j], (void**)&valor );
+
+				//Obtem o número de células desse valor
+				VAL_obtemNumeroCelulas ( valor, &num_celulas );
+		
+		/*Obtem os estados da celula*/
+				
+				//Vai pra posição (i,j) da matriz
+				MAT_percorreMatriz ( pDesenho->matriz, i, j );
+
+				//Obtem a célula da posição (i,j)
+				MAT_obterValorCorrente ( pDesenho->matriz, &celula );
+
+				//Obtem os estados da célula
+				CEL_obtemEstadoAtual ( celula, &estado_atual );
+				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+
+				/*Se a célula estiver marcada*/
+				if ( estado_atual == 1 ){
+					
+					//Se ela estiver marcada corretamente
+					if ( estado_atual == estado_correto ){
+						
+						//Contador de células marcadas +1
+						count_cel++;
+					}
+
+					//Se não estiver marcada corretamente
+					
+					//Marca o valor atual como não resolvido
+					VAL_defineSolucao ( valor, 0 );
+
+					//Zera contador
+					count_cel = 0;
+
+					//Avança pro próximo valor
+					retLis = LIS_PercorreLista ( pDesenho->listaValoresV[j], 1);
+					
+					//Se chegou ao fim da lista de valores dessa linha
+					if ( retLis == LIS_CondRetFimLista ){
+						break;		//Segue para a próxima linha
+					}
+				}
+
+				/*Se a célula não estiver marcada*/
+				else if ( estado_atual == 2 ){
+
+					//Se quantidade de células marcadas é igual a do valor
+					if ( count_cel == num_celulas ){
+						
+						//Define o valor como resolvido
+						VAL_defineSolucao ( valor, 1 );
+
+						//Zera contador
+						count_cel = 0 ;
+
+						//Avança pro próximo valor
+						retLis = LIS_PercorreLista ( pDesenho->listaValoresV[j], 1);
+						//Se chegou ao fim da lista de valores dessa linha
+						if ( retLis == LIS_CondRetFimLista ){
+							break;		//Segue para a próxima linha
+						}
+					}
+					//Se count_cell != num_celulas, segue para a próxima célula
+				}
+			}
+		}
+
+		return DES_CondRetOK;
+	}
+
+
+/************************************************************************
+*
 *  Função: DES Salva Desenho
 */
 
 	DES_tpCondRet DES_salvaDesenho (void){
 		
-		int i, linhas, colunas, numCelulas, solucao;
+		int i, j, linhas, colunas;
+		int numCelulas, solucao, estado_atual, estado_correto;
 		
 		FILE* fpOut;
 		VAL_tppValor valor = NULL ;
+		CEL_tppCelula celula = NULL ;
 
 		LIS_tpCondRet retLis;
+		MAT_tpCondRet retMat;
 
 		fpOut = fopen ( strcat( pDesenho->nome, ".txt"), "w" );	//Abre o arquivo para escrita
 		if ( fpOut == NULL )
@@ -430,6 +711,9 @@
 		//Para todas as linhas
 		for ( i = 0 ; i<linhas ; i++ ){
 			
+			//Identifica a linha
+			fprintf( fpOut, "Valores da linha %d ",i+1);
+
 			//Vai pro inicio da lista
 			LIS_IrInicioLista ( pDesenho->listaValoresH[i] );
 			
@@ -447,7 +731,7 @@
 				retLis = LIS_PercorreLista ( pDesenho->listaValoresH[i], 1);
 			} while ( retLis == LIS_CondRetOK );
 
-			fprintf( fpOut, " Valores da linha %d\n", i);
+			fprintf( fpOut, "\n", i);	//Pula uma linha
 		}
 		
 		/*Escreve a lista de valores vertical*/
@@ -455,6 +739,9 @@
 		//Para todas as colunas
 		for ( i = 0 ; i<colunas ; i++ ){
 			
+			//Identifica a linha
+			fprintf( fpOut, "Valores da coluna %d ",i+1);
+
 			//Vai pro inicio da lista
 			LIS_IrInicioLista ( pDesenho->listaValoresV[i] );
 			
@@ -472,18 +759,218 @@
 				retLis = LIS_PercorreLista ( pDesenho->listaValoresV[i], 1);
 			} while ( retLis == LIS_CondRetOK );
 
-			fprintf( fpOut, " Valores da coluna %d\n", i);
+			fprintf( fpOut, "\n", i);	//Pula uma linha
 		}
 
+		/*Escreve as informações das células*/
+
+		fprintf( fpOut, "\nInformações das células:\n");
+
+		for ( i=0 ; i<linhas; i++ ){
+			
+			//Identifica a linha
+			fprintf( fpOut, "Linha %d ", i+1) ;
+
+			//Vai pro início da matriz
+			MAT_percorreMatriz ( pDesenho->matriz, 0, 0);
+
+			for ( j=0 ; j<colunas ; j++ ){
+				
+				//Obtem a célula
+				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula);
+
+				//Obtem as informações da célula
+				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+				CEL_obtemEstadoAtual ( celula, &estado_atual );
+
+				fprintf( fpOut, " (%d, %d) ", estado_atual, estado_correto );
+
+				//Avança para o próximo elemento da matriz
+				MAT_percorreMatriz ( pDesenho->matriz, i, j);
+			}
+
+			fprintf( fpOut, "\n", i);	//Pula uma linha
+		}
+		
 		fclose( fpOut );	//Fecha o arquivo
 
 		return DES_CondRetOK;
 	}
 
+
 /************************************************************************
 *
 *  Função: DES Carrega Desenho
 */
+
+	DES_tpCondRet DES_carregaDesenho ( char* nome_desenho ){
+	
+		int i, j, count, linhas, colunas;
+		int estado_atual, estado_correto, numCelulas, solucao;
+		
+		FILE* fpIn;
+		VAL_tppValor valor = NULL ;
+
+		VAL_tpCondRet retVal;
+		LIS_tpCondRet retLis;
+
+		//Abre o arquivo
+		fpIn = fopen ( strcat(nome_desenho,".txt") , "r") ;		
+		if ( fpIn == NULL )
+			return DES_CondRetErroAberturaArquivo ;
+
+		//Lê dimensões da matriz
+		fscanf( fpIn, " %d x %d", &linhas, &colunas);
+
+		//Se já existe um desenho aberto
+		if ( pDesenho != NULL ){
+			//Destroi desenho atual
+			DES_destroiDesenho();
+		}
+
+		//Cria um novo desenho
+		DES_criaDesenho ( linhas, colunas, nome_desenho);
+
+		/*Carrega os valores nas listas horizontais*/
+
+		//Para todas as linhas
+		for ( i=1 ; i <= linhas ; i++ ){
+			
+			//Obtem o número da linha
+			fscanf( fpIn, "Valores da linha %d", &count);
+
+			//Obtem os dados do valor e o insere na lista correta
+			while ( fscanf ( fpIn , " (%d, %d)", &solucao, &numCelulas) == 2 ){
+				
+				//Cria valor
+				retVal = VAL_criaValor( &valor, numCelulas );
+				if ( retVal == VAL_CondRetFaltouMemoria ){
+					return DES_CondRetFaltouMemoria;
+				}
+
+				//Insere valor na lista correta
+				retLis = LIS_InserirElementoApos ( pDesenho->listaValoresH[i], &valor);
+				if ( retLis == LIS_CondRetFaltouMemoria ){
+					return DES_CondRetFaltouMemoria;
+				}
+			}
+		}
+
+		/*Carrega os valores nas listas verticais*/
+
+		//Para todas as colunas
+		for ( i=1 ; i <= colunas ; i++ ){
+			
+			//Obtem o número da coluna
+			fscanf( fpIn, "Valores da coluna %d", &count);
+
+			//Obtem os dados do valor e o insere na lista correta
+			while ( fscanf ( fpIn , " (%d, %d)", &solucao, &numCelulas) == 2 ){
+				
+				//Cria valor
+				retVal = VAL_criaValor( &valor, numCelulas );
+				if ( retVal == VAL_CondRetFaltouMemoria ){
+					return DES_CondRetFaltouMemoria;
+				}
+
+				//Insere valor na lista correta
+				retLis = LIS_InserirElementoApos ( pDesenho->listaValoresV[i], &valor);
+				if ( retLis == LIS_CondRetFaltouMemoria ){
+					return DES_CondRetFaltouMemoria;
+				}
+			}
+		}
+
+		/*Insere as informações das células*/
+
+		fscanf( fpIn, " Informações das células:" );
+
+		//Para cada linha
+		for ( i=0 ; i<linhas ; i++ ){
+			
+			//Obtem o número da linha
+			fscanf( fpIn, " Linha %d", &count );
+
+			//Para cada coluna
+			for ( j=0 ; j<colunas ; j++ ){
+				
+				//Obtem os dados da célula
+				fscanf ( fpIn , " (%d, %d)", &estado_atual, &estado_correto) ;
+
+				//Modifica o estado atual da célula (i,j)
+				switch ( estado_atual ){
+
+					case 1:
+						DES_modificaCelulaAtual (i, j, 'm');
+					case 2:
+						DES_modificaCelulaAtual (i, j, 'd');
+					default:
+						DES_modificaCelulaAtual (i, j, NULL);
+				}
+
+				//Modifica o estado correto da célula (i,j)
+				switch ( estado_correto ){
+
+					case 1:
+						DES_modificaCelulaCorreto (i, j, 'm');
+					case 2:
+						DES_modificaCelulaCorreto (i, j, 'd');
+					default:
+						DES_modificaCelulaCorreto (i, j, NULL);
+				}
+				
+			}
+		}
+
+		fclose ( fpIn );
+
+		return DES_CondRetOK;
+	}
+
+
+/************************************************************************
+*
+*  Função: DES Confere Conclusão do Desenho
+*/
+
+	DES_tpCondRet DES_confereConclusaoDesenho ( void ){
+	
+		int i, j, linhas, colunas;
+		int estado_atual, estado_correto;
+
+		CEL_tppCelula celula;
+
+		//Obtem as dimensões da matriz
+		MAT_obterLinhas ( pDesenho->matriz, &linhas );
+		MAT_obterColunas ( pDesenho->matriz, &colunas );
+
+		//Para cada linha
+		for ( i=0; i<linhas ; i++ ){
+			
+			//Para cada coluna
+			for ( j=0 ; j<colunas ; j++ ){
+
+		/*Obter os estados da célula (i,j)*/
+
+				//Obtem a célula
+				MAT_obterValorCorrente ( pDesenho->matriz, &celula );
+
+				//Obtem os estados
+				CEL_obtemEstadoAtual ( celula, &estado_atual) ;
+				CEL_obtemEstadoCorreto ( celula, &estado_correto);
+
+				//Se a célula está incorreta
+				if ( estado_atual != estado_correto ){
+					
+					return DES_CondRetDesenhoIncorreto;
+				}
+
+				//Se a célula está correta, segue para a próxima
+			}
+		}
+
+		return DES_CondRetDesenhoCorreto;
+	}
 
 
 
