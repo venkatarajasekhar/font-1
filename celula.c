@@ -130,7 +130,7 @@
 
 	CEL_tpCondRet CEL_alteraestadoCorreto ( CEL_tppCelula pCelula, int valor ){
 		
-		pCelula->estado_atual = valor;
+		pCelula->estado_correto = valor;
 
 		return CEL_CondRetOK;
 	}

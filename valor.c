@@ -107,7 +107,7 @@
 *	Função: VAL Obtem Número de Células
 */
 
-	int VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* refNumCel ){
+	VAL_tpCondRet VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* refNumCel ){
 	
 		*refNumCel = pValor->num_celulas ;
 

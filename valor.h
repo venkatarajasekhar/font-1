@@ -198,7 +198,7 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *
 ***********************************************************************/
 
-	int VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* pNumCel ) ;
+	VAL_tpCondRet VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* pNumCel ) ;
 
 
 

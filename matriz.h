@@ -220,6 +220,64 @@
 
 /***********************************************************************
 *
+*	$FC Função: MAT Obter Linhas
+*
+*	$ED Descrição da função
+*		Informa a quantidade de linhas da matriz.
+*		
+*	$EP Parâmetros
+*		pMatriz	- Ponteiro para a matriz.	
+*		pLinhas	- Ponteiro para o inteiro que receberá
+*				  a quantidade de linhas.	
+*
+*	$FV Valor retornado
+*		MAT_tpCondRetOK
+*
+*   $AE Assertivas de entrada 
+*		pMatriz aponta para uma matriz válida.
+* 		pLinhas aponta para um inteiro.
+* 
+*   $AS Assertivas de saída 
+*		A matriz não é alterada.
+*		O conteúdo pLinhas recebe número
+*		de linhas da matriz.
+*
+***********************************************************************/
+
+	MAT_tpCondRet MAT_obterLinhas ( MAT_tppMatriz pMatriz, int* pLinhas );
+
+
+/***********************************************************************
+*
+*	$FC Função: MAT Obter Colunas
+*
+*	$ED Descrição da função
+*		Informa a quantidade de colunas da matriz.
+*		
+*	$EP Parâmetros
+*		pMatriz		- Ponteiro para a matriz.	
+*		pColunas	- Ponteiro para o inteiro que receberá
+*					  a quantidade de colunas.	
+*
+*	$FV Valor retornado
+*		MAT_tpCondRetOK
+*
+*   $AE Assertivas de entrada 
+*		pMatriz aponta para uma matriz válida.
+* 		pColunas aponta para um inteiro.
+* 
+*   $AS Assertivas de saída 
+*		A matriz não é alterada.
+*		O conteúdo pColunas recebe número
+*		de colunas da matriz.
+*
+***********************************************************************/
+
+	MAT_tpCondRet MAT_obterColunas ( MAT_tppMatriz pMatriz, int* pColunas );
+
+
+/***********************************************************************
+*
 *	$FC Função: MAT Reseta Matriz
 *
 *	$ED Descrição da função

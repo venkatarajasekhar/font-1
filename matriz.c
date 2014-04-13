@@ -266,6 +266,32 @@
 
 /***********************************************************************
 *
+*  Função: MAT Obter Linhas
+*/
+
+	MAT_tpCondRet MAT_obterLinhas ( MAT_tppMatriz pMatriz, int* pLinhas ){
+		
+		*pLinhas = pMatriz->linhas;
+
+		return MAT_CondRetOK;
+	}
+
+
+/***********************************************************************
+*
+*  Função: MAT Obter Colunas
+*/
+
+	MAT_tpCondRet MAT_obterColunas ( MAT_tppMatriz pMatriz, int* pColunas ){
+		
+		*pColunas = pMatriz->colunas;
+
+		return MAT_CondRetOK;
+	}
+
+	
+/***********************************************************************
+*
 *  Função: MAT Reseta Matriz
 */
 
@@ -293,5 +319,7 @@
 
 		return MAT_CondRetOK;
 	}
+
+
 
 /********** Fim do módulo de implementação: Módulo Matriz **********/
