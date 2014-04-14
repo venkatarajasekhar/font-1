@@ -48,14 +48,22 @@
 		
 		MAT_tppMatriz matriz;
 					/*Ponteiro para a matriz*/
+		
 		LIS_tppLista* listaValoresH ;
 					/*Vetor de listas de valores horizontais*/
+		
 		LIS_tppLista* listaValoresV ;
 					/*Vetor de listas de valores verticais*/
+		
 		VAL_tpCondRet (*destroiValor) (VAL_tppValor valor) ;
 					/*Ponteiro para a função de de exclusão de valores*/
+		
 		CEL_tpCondRet (*destroiCelula) (CEL_tppCelula celula) ;
 					/*Ponteiro para a função de de exclusão de células*/
+
+		int hints ;
+					/*Armazena a quantidade de hints que o usuário pode usar*/
+
 		char* nome ;
 					/*Nome que identifica o desenho*/
 
@@ -183,7 +191,7 @@
 			//Libera os vetores de listas, a matriz e o desenho
 			free (pDesenho->listaValoresH);
 			free (pDesenho->listaValoresV);
-			retMat = MAT_destroiMatriz ( pDesenho->matriz );
+			MAT_destroiMatriz ( pDesenho->matriz );
 			free (pDesenho);
 			
 			return DES_CondRetFaltouMemoria;
@@ -191,6 +199,9 @@
 
 		//Atribui o nome do desenho
 		pDesenho->nome = nome ;
+
+		//Atribui a quantidade de hints
+		pDesenho->hints = 10;
 
 		return DES_CondRetOK;
 	}
@@ -203,7 +214,7 @@
 
 	DES_tpCondRet DES_destroiDesenho( void ){
 		
-		int linhas, colunas;
+		int linhas, colunas, i;
 
 		//Obtem as dimensões do desenho
 		MAT_obterLinhas ( pDesenho->matriz, &linhas );
@@ -791,6 +802,9 @@
 
 			fprintf( fpOut, "\n", i);	//Pula uma linha
 		}
+
+		/*Escreve a quantidade de hints*/
+		fprintf( fpOut, "Hints: %d\n", pDesenho->hints );
 		
 		fclose( fpOut );	//Fecha o arquivo
 
@@ -922,6 +936,9 @@
 			}
 		}
 
+		/*Insere a quantidade de hints*/
+		fscanf ( fpIn, " Hints: %d", &(pDesenho->hints) );
+
 		fclose ( fpIn );
 
 		return DES_CondRetOK;
@@ -967,6 +984,57 @@
 
 				//Se a célula está correta, segue para a próxima
 			}
+		}
+
+		return DES_CondRetDesenhoCorreto;
+	}
+
+
+/************************************************************************
+*
+*  Função: DES Usa Dica
+*/
+
+	DES_tpCondRet DES_usaDica( void ){
+		
+		int i, j, linhas, colunas;
+		int estado_atual, estado_correto;
+
+		CEL_tppCelula celula = NULL;
+
+		//Obtem as dimensões da matriz
+		MAT_obterLinhas ( pDesenho->matriz, &linhas );
+		MAT_obterColunas ( pDesenho->matriz, &colunas );
+		
+		//Se ainda possui dicas
+		if ( pDesenho->hints == 0 )
+			return DES_CondRetSemHints;
+
+		//Procura por célula a ser pintada de baixo para cima, esquerda para direita
+		for ( i=linhas-1 ; i >= 0 ; i-- ){
+
+			for ( j=0 ; j<colunas ; j++ ){
+				
+				/*Obter celula na posição (i,j)*/
+				MAT_percorreMatriz ( pDesenho->matriz, i, j);
+				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
+				
+				/*Obter informações da célula*/
+				CEL_obtemEstadoAtual ( celula, &estado_atual );
+				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+
+				//Se a celula não está marcada corretamente
+				if ( estado_atual != estado_correto ){
+
+					//Marca a célula
+					DES_modificaCelulaAtual ( i, j, 'm' ) ;
+					
+					//Decrementa as dicas
+					(pDesenho->hints)--;
+					
+					return DES_CondRetOK;
+				}
+			} 
 		}
 
 		return DES_CondRetDesenhoCorreto;

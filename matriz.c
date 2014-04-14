@@ -60,7 +60,7 @@
 
 /**************************************************************************
 *
-*	$TC Tipo de dados: MAT Descritor da Cabeça de matriz
+*	$TC Tipo de dados: MAT Descritor de Cabeça de Matriz
 *
 *	$ED Descrição do tipo
 *		Contem todos os dados da matriz.

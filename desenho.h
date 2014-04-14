@@ -21,7 +21,8 @@
 *	$ED Descrição do módulo
 *		Este é o módulo responsável pela criação e manipulação
 *		do desenho no jogo Nonogram.
-*		Só existe um desenho em execução por modo de jogo.
+*		Só existe um desenho em execução de cada vez.
+*		Cada desenho possui 10 hints.
 *		Um desenho pode ser salvo a qualquer momento
 *		e carregado posteriormente.
 *
@@ -63,13 +64,16 @@
 			DES_CondRetCelulaNula = 4,
 			/*O estado correto de uma das células é nulo*/
 
-			DES_CondRetDesenhoConcluido = 5,
+			DES_CondRetDesenhoCorreto = 5,
 			/*O desenho foi preenchido corretamente*/
 
 			DES_CondRetDesenhoIncorreto = 6,
 			/*O desenho não foi preenchido corretamente*/
 
-			DES_CondRetFaltouMemoria = 7
+			DES_CondRetSemHints = 7,
+			/*Todas as dicas já foram utilizadas*/
+
+			DES_CondRetFaltouMemoria = 8
 			/* Faltou memória ao alocar dados */
 
 	} DES_tpCondRet ;
@@ -316,6 +320,31 @@
 **********************************************************************/
 
 	DES_tpCondRet DES_confereConclusaoDesenho ( void );
+
+
+/***********************************************************************
+*
+*	$FC Função:	DES Usa Dica
+*
+*	$ED Descrição da função
+*		Marca uma célula corretamente, se o usuário ainda tiver
+*		hints disponíveis.
+*
+*	$FV Valor retornado
+*		DES_CondRetOK
+*		DES_CondRetDesenhoConcluido
+*		DES_CondRetSemHints
+*
+*   $AE Assertivas de entrada 
+*		O desenho foi criado.
+*		
+*	$AS Assertivas de saída
+*		Se OK, uma célula é marcada corretamente.
+*		Do contrário, nada acontece.
+*
+**********************************************************************/
+
+	DES_tpCondRet DES_usaDica( void );
 
 
 
