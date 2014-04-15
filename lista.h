@@ -65,20 +65,14 @@ typedef struct LIS_tagLista* LIS_tppLista ;
 	
 		LIS_CondRetOK = 0 ,
 			/* Concluiu corretamente */
-		
-		LIS_CondRetListaInexistente = 1 ,
-			/* Lista inexistente, ponteiro é NULL */
 	
-		LIS_CondRetListaVazia = 2 ,
+		LIS_CondRetListaVazia = 1 ,
 			/* A lista não contém elementos */
 	
-		LIS_CondRetFimLista = 3 ,
+		LIS_CondRetFimLista = 2 ,
 			/* Foi atingido o fim de lista */
 	
-		LIS_CondRetNaoAchou = 4 ,
-			/* Não encontrou o valor procurado */
-	
-		LIS_CondRetFaltouMemoria = 5 ,
+		LIS_CondRetFaltouMemoria = 3
 			/* Faltou memória ao tentar criar um elemento de lista */
 	
 	} LIS_tpCondRet ;

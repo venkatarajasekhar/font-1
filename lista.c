@@ -219,44 +219,38 @@ static void LIS_LimparCabeca ( LIS_tppLista pLista ) ;
 *  Função: LIS  Inserir Elemento Após
 */
 
-	LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor )  
-	{
-		if ( pLista == NULL )
-			return LIS_CondRetListaInexistente;
-	
-		else
+	LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) {
+		
+		/* Criar elemento a inserir após */
+		LIS_tpElemLista * pElem ;
+		pElem = LIS_CriarElemento( pLista , pValor ) ;
+
+		if ( pElem == NULL )
+			return LIS_CondRetFaltouMemoria ;
+
+			/* Encadear o elemento após o elemento */
+		if ( pLista->pElemCorr == NULL ) 
 		{
-				/* Criar elemento a inserir após */
-			LIS_tpElemLista * pElem ;
-			pElem = LIS_CriarElemento( pLista , pValor ) ;
+			pLista->pOrigemLista = pElem ;
+			pLista->pFimLista = pElem ;
+		} 	
 
-			if ( pElem == NULL )
-				return LIS_CondRetFaltouMemoria ;
-
-				/* Encadear o elemento após o elemento */
-			if ( pLista->pElemCorr == NULL ) 
-			{
-				pLista->pOrigemLista = pElem ;
+		else 
+		{
+			if ( pLista->pElemCorr->pProx != NULL ) {
+				pElem->pProx  = pLista->pElemCorr->pProx ;
+				pLista->pElemCorr->pProx->pAnt = pElem ;
+			} 
+			else {
 				pLista->pFimLista = pElem ;
-			} 	
-
-			else 
-			{
-				if ( pLista->pElemCorr->pProx != NULL ) {
-					pElem->pProx  = pLista->pElemCorr->pProx ;
-					pLista->pElemCorr->pProx->pAnt = pElem ;
-				} 
-				else {
-				   pLista->pFimLista = pElem ;
-				}
-				pElem->pAnt = pLista->pElemCorr ;
-				pLista->pElemCorr->pProx = pElem ;
-			}   
+			}
+			pElem->pAnt = pLista->pElemCorr ;
+			pLista->pElemCorr->pProx = pElem ;
+		}   
 
 		pLista->pElemCorr = pElem ;         
 	
 		return LIS_CondRetOK ;
-		}
 	}
 
 
