@@ -23,8 +23,12 @@
 
 /********************* Diretivas de pré-processamento *********************/
 
-#include	"celula.h"
 #include	<malloc.h>
+
+#define		CELULA_OWN
+#include	"celula.h"
+#undef		CELULA_OWN
+
 #define NULL 0
 
 

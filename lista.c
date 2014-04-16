@@ -22,9 +22,12 @@
 
 
 /********************* Diretivas de pré-processamento *********************/
-
-#include "lista.h"
 #include <malloc.h>
+
+#define	LISTA_OWN
+#include "lista.h"
+#undef LISTA_OWN
+
 #define NULL 0
 
 

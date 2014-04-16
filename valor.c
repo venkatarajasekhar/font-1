@@ -24,8 +24,12 @@
 
 /********************* Diretivas de pré-processamento *********************/
 
-#include	"valor.h"
 #include	<malloc.h>
+
+#define		VALOR_OWN
+#include	"valor.h"
+#undef		VALOR_OWN
+
 #define NULL 0
 
 

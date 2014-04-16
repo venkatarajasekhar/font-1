@@ -144,16 +144,15 @@
 *
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
-*		MAT_tpCondRetFronteira
 *
 *   $AE Assertivas de entrada
 *		pMatriz aponta para uma matriz válida.
-*		linha e coluna são menores ou iguais as dimensões
-*		da matriz.
+*		linha e coluna são valores positivos menores 
+*		ou iguais as dimensões da matriz.
 *
 *   $AS Assertivas de saída 
 *		Se Ok, o elemento corrente da matriz é o elemento na posição
-*		linha x coluna.
+*		(linha,coluna).
 *		Senão, a matriz não é alterada.
 *
 ***********************************************************************/

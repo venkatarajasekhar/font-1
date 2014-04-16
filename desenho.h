@@ -144,7 +144,7 @@
 *		estado	- Caracter indicando o estado a ser atribuído.
 *				  'm' para marcada
 *				  'd' para desmarcada
-*				  NULL para nulo
+*				  'n' para nulo
 *
 *	$FV Valor retornado
 *		DES_CondRetOK
@@ -176,7 +176,7 @@
 *		estado	- Caracter indicando o estado a ser atribuído.
 *				  'm' para marcada
 *				  'd' para desmarcada
-*				  NULL para nulo
+*				  'n' para nulo
 *
 *	$FV Valor retornado
 *		DES_CondRetOK
@@ -208,7 +208,7 @@
 *		DES_CondRetFaltouMemoria
 *
 *   $AE Assertivas de entrada 
-*		O desenho foi criado.
+*		O desenho foi criado
 *		
 *	$AS Assertivas de saída
 *		As listas horizontais e verticais do desenho 

@@ -24,8 +24,12 @@
 
 /********************* Diretivas de Pré-Processamento *********************/
 
-#include "matriz.h"
 #include <malloc.h>
+
+#define MATRIZ_OWN
+#include "matriz.h"
+#undef	MATRIZ_OWN
+
 #define NULL 0
 
 
@@ -91,65 +95,65 @@
 *  Função: MAT Cria Matriz
 */
 
-	MAT_tpCondRet MAT_criaMatriz ( MAT_tppMatriz* refMatriz, int linhas, int colunas,
+MAT_tpCondRet MAT_criaMatriz ( MAT_tppMatriz* refMatriz, int linhas, int colunas,
 												 void (*ExcluirDado) (void* pDado) ){
-		
+
 		MAT_tpElemMatriz** vetAux ; //vetor auxiliar para armazenar os elementos
 		int i, j ;
 
 		//Aloca a cabeça da matriz
 		*refMatriz = (MAT_tpMatriz*) malloc ( sizeof ( MAT_tpMatriz ) ) ;
-		
+
 		if ( *refMatriz == NULL )
 			return MAT_CondRetFaltouMemoria;
 
 		//Alocação do vetor auxiliar
-		vetAux = (MAT_tpElemMatriz **) malloc 
-							( sizeof ( MAT_tpElemMatriz*) * linhas * colunas );
+		vetAux = (MAT_tpElemMatriz **) malloc( sizeof( MAT_tpElemMatriz* ) * (linhas * colunas) );
 		if ( vetAux == NULL ) {
+
 			free ( *refMatriz );
 			return MAT_CondRetFaltouMemoria;
 		}
-	
+
 		/* Alocação dos elementos */
-		for (i=0; i < linhas*colunas; i++) {
+		for (i=0; i < (linhas*colunas); i++) {
+			
 			vetAux[i] = (MAT_tpElemMatriz *) malloc ( sizeof(MAT_tpElemMatriz) );
 			if ( vetAux[i] == NULL ) { 
-				
+
 				for (j=0; j<i; j++) { // Libera tudo que tinha sido alocado
 					free(vetAux[j]);
 				}
-				
+
+				free(vetAux);
 				free(*refMatriz);
-				
+
 				return MAT_CondRetFaltouMemoria;
 			}
-
-			vetAux[i]->pDado = NULL; // Zera os ponteiros para lista
 		}
 
 		/* Ligar os ponteiros dos elementos */
 		for (i=0; i < linhas; i++) {
 
 			for (j=0; j < colunas; j++) {
-					/*Inicializa pValor*/
-				vetAux[i*linhas + j]->pDado = NULL;
+					//Inicializa pValor
+				vetAux[i*colunas + j]->pDado = NULL;
 
-					/* Cima */
-				vetAux[i*linhas + j]->pCima = (i > 0) ? 
-					vetAux[(i-1)*linhas + j] : NULL;
+					// Cima 
+				vetAux[i*colunas + j]->pCima = (i > 0) ? 
+					vetAux[(i-1)*colunas + j] : NULL;
 
-					/* Direita */
-				vetAux[i*linhas + j]->pDir = (j < colunas-1) ? 
-					vetAux[i*linhas + (j+1)] : NULL;
+					// Direita 
+				vetAux[i*colunas + j]->pDir = (j < colunas-1) ? 
+					vetAux[i*colunas + (j+1)] : NULL;
 
-					/* Baixo */
-				vetAux[i*linhas + j]->pBaixo = (i < linhas-1) ? 
-					vetAux[(i+1)*linhas + j] : NULL;
+					// Baixo
+				vetAux[i*colunas + j]->pBaixo = (i < linhas-1) ? 
+					vetAux[(i+1)*colunas + j] : NULL;
 
-					/* Esquerda */
-				vetAux[i*linhas + j]->pEsq = (j > 0) ? 
-					vetAux[i*linhas + (j-1)] : NULL;
+					// Esquerda
+				vetAux[i*colunas + j]->pEsq = (j > 0) ? 
+					vetAux[i*colunas + (j-1)] : NULL;
 			}
 		}
 
@@ -181,10 +185,10 @@
 
 			while ( pMatriz->pElemCorrente != NULL ){	//Se existe mais uma coluna
 			
-				pElemAux = pMatriz->pElemCorrente ;			//Salva elemento corrente em aux
-				pMatriz->pElemCorrente = pElemAux->pDir ;	//Corrente aponta para próxima coluna
-				pMatriz->ExcluirDado ( pElemAux->pDado );	//Libera antigo dado corrente
-				free ( pElemAux );							//Libera antigo elemento corrente
+				pElemAux = pMatriz->pElemCorrente->pDir ;				//Salva próximo elemento
+				pMatriz->ExcluirDado ( pMatriz->pElemCorrente->pDado );	//Libera dado corrente
+				free ( pMatriz->pElemCorrente );						//Libera elemento corrente
+				pMatriz->pElemCorrente = pElemAux ;						//Corrente aponta para próximo elemento
 			
 			}
 		}
@@ -202,7 +206,12 @@
 
 	MAT_tpCondRet MAT_percorreMatriz ( MAT_tppMatriz pMatriz, int linha, int coluna ){
 	
-		if ( (linha != 0) || (coluna != 0) ){	//Se a posição (linha,coluna) não é a inicial
+		if ( (linha == 0) && (coluna == 0) ){	//Se a posição (linha,coluna) é a inicial
+
+			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
+		}
+
+		else{
 
 			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
 
@@ -219,15 +228,9 @@
 				pMatriz->pElemCorrente = pMatriz->pElemCorrente->pDir ;
 				coluna--;
 			}
-
 		}
 
-		else{	//Se a posição (linha,coluna) é a inicial
-
-			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
-			
-			return MAT_CondRetOK ;
-		}
+		return MAT_CondRetOK ;
 	}
 
 
@@ -311,7 +314,7 @@
 				pElemAux = pMatriz->pElemCorrente->pDir ;				//Salva proxima coluna	
 				pMatriz->ExcluirDado ( pMatriz->pElemCorrente->pDado ); //Exclui dado da coluna atual
 				pMatriz->pElemCorrente->pDado = NULL ;
-				pMatriz->pElemCorrente = pElemAux->pDir ;				//Corrente aponta para a próxima coluna		
+				pMatriz->pElemCorrente = pElemAux;						//Corrente aponta para a próxima coluna		
 			}
 		}
 

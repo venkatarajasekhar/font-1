@@ -135,7 +135,7 @@ static LIS_tppLista vtListas [MAX_VET_LIS] ;
 			CondRetObtida = LIS_CriarLista ( &vtListas[idLista], NULL );	
 		
 			return TST_CompararInt ( CondRetEsperada, CondRetObtida, 
-									"Condição de retorno incompatível ao criar árvore");
+									"Condição de retorno incompatível ao criar lista");
 		}//Fim Testar LIS_CriarLista
 
 
