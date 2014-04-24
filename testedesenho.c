@@ -37,7 +37,7 @@
 
 #include	"desenho.h"
 
-#define MAX_STRING 100
+#define MAX_STRING 54
 
 /* Tabela dos nomes dos comandos de teste específicos */
 

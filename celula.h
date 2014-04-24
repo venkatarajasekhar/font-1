@@ -25,7 +25,7 @@
 *		pelo usuário no modo Desafio, que pode ser: marcada, descartada e nulo.
 *		Se o estado de uma célula é 1, ela pertence ao desenho.
 *		Se o estado de uma célula é 2, ela não pertence ao desenho.
-*		Se o estado de uma célula é NULL, o usuário ainda não interagiu
+*		Se o estado de uma célula é 0, o usuário ainda não interagiu
 *		com tal célula.
 *		A estrutura também armazena o estado correto da célula para
 *		averiguar a corretude do desenho no modo Desafio.
@@ -192,7 +192,7 @@
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
-*		valor é um inteiro entre [1..2] ou NULL.
+*		valor é um inteiro entre [0..2].
 *		
 *	$AS Assertivas de saída
 *		A célula apontada por pCelula tem seu estado atual alterado.
@@ -219,7 +219,7 @@
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
-*		valor é um inteiro entre [1..2] ou NULL. 
+*		valor é um inteiro entre [0..2]. 
 *		
 *	$AS Assertivas de saída
 *		A célula apontada por pCelula tem seu estado correto alterado.

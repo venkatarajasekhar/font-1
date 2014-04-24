@@ -110,24 +110,23 @@
 *
 *	$ED Descrição da função
 *		Destroi a matriz, desalocando seus elementos.
-*		Não modifica o ponteiro passado, deve-se atribur NULL a este
-*		após a chamada da função.
 *
 *	$EP Parâmetros
-*		pMatriz	- Ponteiro para a matriz a ser destruida
+*		refMatriz	- Referência para a matriz a ser destruida
 *	
 *	$FV Valor retornado
 *		MAT_tpCondRetOK
 *
 *   $AE Assertivas de entrada 
-*		pMatriz aponta para uma matriz existente.
+*		refMatriz referencia uma matriz existente.
 * 
 *   $AS Assertivas de saída 
 *		A matriz e seus elementos foram desalocados.
+*		refMatriz recebe NULL.
 *
 ***********************************************************************/
 
-	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz pMatriz );
+	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz* refMatriz );
 
 
 /***********************************************************************

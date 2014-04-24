@@ -13,8 +13,8 @@
 *			sa, Sérgio Argolo
 *			ft, Francisco Tacora
 *  $HA Histórico de evolução:
-*		Versão	Autor	Data		Observações
-*		1.00	ft		02/04/2014	Início do desenvolvimento
+*		Versão	Autor	Data			Observações
+*		1.00	ft		02/04/2014		Início do desenvolvimento
 *       2.00    ft      05/04/2014      Desenvolvmento dos testes das funções
 *		3.00    ft      15/04/2014      Revisão dos testes
 *

@@ -143,11 +143,11 @@ static MAT_tppMatriz vtMatriz [MAX_VET_MAT] ;
 			if ( (numLidos != 2) || (!ValidarIdMat (idMat)) )
 				return TST_CondRetParm ;
 
-			CondRetObtida = MAT_destroiMatriz ( vtMatriz [idMat] ) ;
+			CondRetObtida = MAT_destroiMatriz ( &vtMatriz [idMat] ) ;
 
 			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
 									"Condição de retorno incompatível ao destruir matriz.") ;
-		} //Fim Testar LIS_DestruirLista
+		} //Fim Testar MAT_destroiMatriz
 
 
 		/* Testar MAT_percorreMatriz */

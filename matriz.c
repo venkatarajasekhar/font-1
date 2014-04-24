@@ -174,26 +174,27 @@ MAT_tpCondRet MAT_criaMatriz ( MAT_tppMatriz* refMatriz, int linhas, int colunas
 *  Função: MAT Destroi Matriz
 */
 	
-	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz pMatriz ){
-	
-		MAT_tpElemMatriz *pElemAux;
-
-		while ( pMatriz->pElemInicial != NULL ){	//Se existe mais uma linha
+	MAT_tpCondRet MAT_destroiMatriz ( MAT_tppMatriz* refMatriz ){
 		
-			pMatriz->pElemCorrente = pMatriz->pElemInicial ;		//Corrente aponta para a primeira coluna
-			pMatriz->pElemInicial = pMatriz->pElemInicial->pBaixo ;	//Inicial aponta para a próxima linha
+		while ( (*refMatriz)->pElemInicial != NULL ){	//Se existe mais uma linha
+		
+			(*refMatriz)->pElemCorrente = (*refMatriz)->pElemInicial ;			//Corrente aponta para a primeira coluna
+			(*refMatriz)->pElemInicial = (*refMatriz)->pElemInicial->pBaixo ;	//Inicial aponta para a próxima linha
 
-			while ( pMatriz->pElemCorrente != NULL ){	//Se existe mais uma coluna
-			
-				pElemAux = pMatriz->pElemCorrente->pDir ;				//Salva próximo elemento
-				pMatriz->ExcluirDado ( pMatriz->pElemCorrente->pDado );	//Libera dado corrente
-				free ( pMatriz->pElemCorrente );						//Libera elemento corrente
-				pMatriz->pElemCorrente = pElemAux ;						//Corrente aponta para próximo elemento
+			while ( (*refMatriz)->pElemCorrente != NULL ){	//Se existe mais uma coluna
+				
+				MAT_tpElemMatriz *pElemAux;
+
+				pElemAux = (*refMatriz)->pElemCorrente->pDir ;						//Salva próximo elemento
+				(*refMatriz)->ExcluirDado ( (*refMatriz)->pElemCorrente->pDado );		//Libera dado corrente
+				free ( (*refMatriz)->pElemCorrente );									//Libera elemento corrente
+				(*refMatriz)->pElemCorrente = pElemAux ;								//Corrente aponta para próximo elemento
 			
 			}
 		}
 
-		free ( pMatriz );	//Libera Matriz
+		free ( (*refMatriz) );	//Libera Matriz
+		(*refMatriz) = NULL ;
 
 		return MAT_CondRetOK;
 	}

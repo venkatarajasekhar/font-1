@@ -17,6 +17,7 @@
 *	$HA Histórico de evolução:
 *	Versão	Autor	Data		Observações
 *	1.0		vyc		11/04/2014	Início do desenvolvimento
+*	2.0		vyc		14/04/2014	Correções
 *
 *	$ED Descrição do módulo
 *		Este é o módulo responsável pela criação e manipulação
