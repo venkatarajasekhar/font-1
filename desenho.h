@@ -361,30 +361,46 @@
 
 /**********************************************************************
 *
-*	$FC Função:	DES Imprime Desenho
+*	$FC Função:	DES Imprime Desenho no modo Projeto
 *
 *	$ED Descrição da função
-*		Imprime na tela as informações do desenho 
-*		referentes ao modo especificado no parâmetro.
-*
-*	$EP Parâmetros
-*		modo -	caracter que indica o modo de impressão utilizado:
-				'd' para modo DESAFIO
-				'p' para modo PROJETO
+*		Imprime na tela o desenho para ser modificado
+*		no modo projeto.
 *
 *	$FV Valor retornado
 *		DES_CondRetOK
 *
 *   $AE Assertivas de entrada 
 *		O desenho existe.
-*		modo corresponde ao caracter 'd' ou 'p'.
 *
 *	$AS Assertivas de saída
 *		As informações do desenho foram impressas na tela.
 *
 **********************************************************************/
 
-	DES_tpCondRet DES_imprimeDesenho ( char modo );
+	DES_tpCondRet DES_imprimeDesenhoProjeto ( void );
+
+
+/**********************************************************************
+*
+*	$FC Função:	DES Imprime Desenho no modo Desafio
+*
+*	$ED Descrição da função
+*		Imprime na tela o desenho, para ser resolvido
+*		no modo desafio.
+*
+*	$FV Valor retornado
+*		DES_CondRetOK
+*
+*   $AE Assertivas de entrada 
+*		O desenho existe.
+*
+*	$AS Assertivas de saída
+*		As informações do desenho foram impressas na tela.
+*
+**********************************************************************/
+
+	DES_tpCondRet DES_imprimeDesenhoDesafio ( void );
 
 
 

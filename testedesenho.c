@@ -51,7 +51,8 @@
 #define		CARREGAR_CMD		"=carregar"
 #define		CONFERE_DES_CMD		"=conferedes"
 #define		USAR_DICA_CMD		"=dica"
-#define		IMPRIME_DES_CMD		"=imprime"
+#define		IMPRIME_PROJ_CMD	"=imprimeproj"
+#define		IMPRIME_DES_CMD		"=imprimedes"
 
 
 
@@ -80,7 +81,8 @@
 *		=carregar		CondRetEsp		nome	
 *		=conferedes		CondRetEsp			
 *		=dica			CondRetEsp		
-*		=imprime		CondRetEsp		modo
+*		=imprimeproj	CondRetEsp
+*		=imprimedes		CondRetEsp
 *
 *************************************************************************/
 
@@ -248,19 +250,33 @@
 									"Condição de retorno incompatível ao usar dica");
 		} //Fim Testar DES_usaDica
 	
-		/*Testar DES_imprimeDesenho*/
-		else if ( strcmp(ComandoTeste, IMPRIME_DES_CMD) == 0 ){
+		/*Testar DES_imprimeDesenhoProjeto*/
+		else if ( strcmp(ComandoTeste, IMPRIME_PROJ_CMD) == 0 ){
 
-			numLidos = LER_LerParametros("ic", &CondRetEsperada, &modo );
+			numLidos = LER_LerParametros("i", &CondRetEsperada );
 
-			if (numLidos != 2 )
+			if (numLidos != 1 )
 				return TST_CondRetParm ;
 
-			CondRetObtida = DES_imprimeDesenho ( modo );
+			CondRetObtida = DES_imprimeDesenhoProjeto();
 
 			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
-									"Condição de retorno incompatível ao imprimir desenho");
-		} //Fim Testar DES_imprimeDesenho
+									"Condição de retorno incompatível ao imprimir desenho no modo projeto");
+		} //Fim Testar DES_imprimeDesenhoProjeto
+
+		/*Testar DES_imprimeDesenhoDesafio*/
+		else if ( strcmp(ComandoTeste, IMPRIME_DES_CMD) == 0 ){
+
+			numLidos = LER_LerParametros("i", &CondRetEsperada );
+
+			if (numLidos != 1 )
+				return TST_CondRetParm ;
+
+			CondRetObtida = DES_imprimeDesenhoDesafio();
+
+			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
+									"Condição de retorno incompatível ao imprimir desenho no modo desafio");
+		} //Fim Testar DES_imprimeDesenhoDesafio
 
 		return TST_CondRetNaoConhec ;
 	}

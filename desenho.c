@@ -315,7 +315,6 @@
 		for ( i=0 ; i < pDesenho->linhas ; i++ ){
 			
 			//Obtem a lista da linha atual
-			LIS_PercorreLista ( pDesenho->listaValoresH, i);
 			LIS_ObterValorCorrente ( pDesenho->listaValoresH, (void**)&LIS_linha_atual);
 			LIS_IrInicioLista ( LIS_linha_atual );
 
@@ -397,6 +396,9 @@
 					}
 				}
 			}// end for j
+			
+			//Avança para a lista da próxima linha
+			LIS_PercorreLista ( pDesenho->listaValoresH, 1);
 			cont_valores = 0; //Zera o contador de valores
 		}//end for i
 				
@@ -410,7 +412,6 @@
 		for ( j=0 ; j < pDesenho->colunas ; j++ ){
 			
 			//Obtem a lista da coluna atual
-			LIS_PercorreLista ( pDesenho->listaValoresV, j);
 			LIS_ObterValorCorrente ( pDesenho->listaValoresV, (void**)&LIS_linha_atual);
 			LIS_IrInicioLista ( LIS_linha_atual );
 
@@ -492,6 +493,9 @@
 					}
 				}
 			}// end for j
+
+			//Avança para a lista da próxima coluna
+			LIS_PercorreLista ( pDesenho->listaValoresV, 1);
 			cont_valores = 0; //Zera o contador de valores
 		}//end for i
 
@@ -721,7 +725,6 @@
 			fprintf( fpOut, "Valores da linha %d ",i+1);
 
 			//Obtem a lista da linha atual
-			LIS_PercorreLista ( pDesenho->listaValoresH, i );
 			LIS_ObterValorCorrente ( pDesenho->listaValoresH, (void**)&lista);
 			LIS_IrInicioLista ( lista );
 			
@@ -742,6 +745,7 @@
 				retLis = LIS_PercorreLista ( lista, 1 );
 			} while ( retLis != LIS_CondRetFimLista );
 
+			LIS_PercorreLista ( pDesenho->listaValoresH, 1 );
 			fprintf( fpOut, "\n", i);	//Pula uma linha
 		}
 		
@@ -756,7 +760,6 @@
 			fprintf( fpOut, "Valores da coluna %d ",i+1);
 
 			//Obtem a lista da linha atual
-			LIS_PercorreLista ( pDesenho->listaValoresV, i);
 			LIS_ObterValorCorrente ( pDesenho->listaValoresV, (void**)&lista);
 			LIS_IrInicioLista ( lista );
 			
@@ -775,6 +778,7 @@
 				retLis = LIS_PercorreLista ( lista, 1 );
 			} while ( retLis != LIS_CondRetFimLista );
 
+			LIS_PercorreLista ( pDesenho->listaValoresV, 1);
 			fprintf( fpOut, "\n", i);	//Pula uma linha
 		}
 
@@ -875,7 +879,6 @@
 			fscanf( fpIn, " Valores da linha %d", &count);
 			
 			//Obtem a lista da linha atual
-			LIS_PercorreLista ( pDesenho->listaValoresH, i);
 			LIS_ObterValorCorrente ( pDesenho->listaValoresH, (void**)&lista);
 
 			//Obtem os dados do valor e o insere na lista correta
@@ -898,6 +901,7 @@
 					return DES_CondRetFaltouMemoria;
 				}
 			}
+			LIS_PercorreLista ( pDesenho->listaValoresH, 1);
 		}
 
 	/*Carrega os valores nas listas verticais*/
@@ -911,7 +915,6 @@
 			fscanf( fpIn, " Valores da coluna %d", &count);
 
 			//Obtem a lista da coluna atual
-			LIS_PercorreLista ( pDesenho->listaValoresV, j);
 			LIS_ObterValorCorrente ( pDesenho->listaValoresV, (void**)&lista);
 
 			//Obtem os dados do valor e o insere na lista correta
@@ -934,6 +937,7 @@
 					return DES_CondRetFaltouMemoria;
 				}
 			}
+			LIS_PercorreLista ( pDesenho->listaValoresV, 1);
 		}
 
 		/*Insere as informações das células*/
@@ -1132,12 +1136,16 @@
 
 /************************************************************************
 *
-*  Função: DES Imprime Desenho
+*  Função: DES Imprime Desenho no modo Projeto
 */
 	
-	DES_tpCondRet DES_imprimeDesenho ( char modo ){
+	DES_tpCondRet DES_imprimeDesenhoProjeto ( void ){
 		
 		int i,j;
+		VAL_tppValor valor = NULL;
+		LIS_tppLista lista = NULL;
+
+		LIS_tpCondRet ret = LIS_CondRetFaltouMemoria;
 		
 	/*Imprime teto*/	
 		for ( i=0; i < pDesenho->colunas; i++ ){
@@ -1146,6 +1154,8 @@
 		printf(" \n");
 
 	/*Imprime colunas*/
+
+		LIS_IrInicioLista ( pDesenho->listaValoresH );
 
 		//Para cada linha
 		for ( i=0; i < pDesenho->linhas; i++ ){
@@ -1158,21 +1168,14 @@
 					
 					int estado = -1;
 
-					//Se for o modo desenho
-					if ( modo = 'd' ){
-						//Obtem o estado atual da célula (i,j)
-						estado = obtemEstadoAtualCelula ( i,j );
-					}
-					//Se for o modo projeto
-					else if ( modo = 'p'){
-						//Obtem o estado correto da célula (i,j)
-						estado = obtemEstadoCorretoCelula ( i,j );
-					}
+					//Obtem o estado correto da célula (i,j)
+					estado = obtemEstadoCorretoCelula ( i,j );
+
 					//Se for a última coluna
 					if ( j == pDesenho->colunas - 1 ){
 						
 						imprimeEstado ( estado );
-						printf ("|\n");
+						printf ("|\n");						
 					}
 					else
 						imprimeEstado ( estado );
@@ -1190,6 +1193,149 @@
 
 		return DES_CondRetOK;
 	}//fim função
+
+
+/************************************************************************
+*
+*  Função: DES Imprime Desenho no modo Desafio
+*/
+	
+	DES_tpCondRet DES_imprimeDesenhoDesafio ( void ){
+
+		int i,j;
+		int listas_vazias = 0;	//contador utilizado na impressão dos valores verticais
+		int num_celulas = -1;
+		int vezes = -1;
+
+		VAL_tppValor valor = NULL;
+		LIS_tppLista lista = NULL;						
+
+		LIS_tpCondRet ret = LIS_CondRetFaltouMemoria;
+		
+	/*Imprime teto*/	
+		for ( i=0; i < pDesenho->colunas; i++ ){
+			printf(" =====");
+		}
+		printf(" \n");
+
+	/*Imprime colunas*/
+
+		LIS_IrInicioLista ( pDesenho->listaValoresH );
+
+		//Para cada linha
+		for ( i=0; i < pDesenho->linhas; i++ ){
+		
+			vezes = 2;	//Flag utilizada para percorrer a mesma linha 2 vezes
+
+			//Obtem a lista de valores da linha atual
+			LIS_ObterValorCorrente ( pDesenho->listaValoresH, (void**)&lista );
+			LIS_IrInicioLista ( lista );
+			
+			do{
+				//Para cada coluna
+				for ( j=0; j < pDesenho->colunas; j++ ){
+					
+					int estado = -1;
+
+					//Obtem o estado correto da célula (i,j)
+					estado = obtemEstadoAtualCelula ( i,j );
+
+					//Se for a última coluna
+					if ( j == pDesenho->colunas - 1 ){
+						
+						imprimeEstado ( estado );
+						printf ("|");
+						
+						//Se for a primeira vez, pula linha. Formatação para os valores
+						if ( vezes == 2 )
+							printf ("\n");
+						
+						//Se for a última vez, imprime os valores horizontais
+						else{
+							
+							//Reseta a variável ret
+							ret = LIS_CondRetFaltouMemoria;
+
+							//Enquanto não chegar ao fim da lista de valores
+							while ( ret != LIS_CondRetFimLista ){
+
+								//Obtem o número de células do valor
+								LIS_ObterValorCorrente ( lista, (void**)&valor );
+								VAL_obtemNumeroCelulas ( valor, &num_celulas );
+
+								printf ("%d ", num_celulas); //Imprime número de células
+								ret = LIS_PercorreLista ( lista, 1 );
+							}
+							printf ("\n");
+						}
+					}
+					else
+						imprimeEstado ( estado );
+				}
+
+				vezes--;
+
+			} while ( vezes > 0 );
+
+			LIS_PercorreLista ( pDesenho->listaValoresH, 1 );
+
+	/*Imprime Chão*/
+			for ( j=0; j < pDesenho->colunas; j++ )
+				printf(" =====");
+			printf(" \n");
+		}//fim for i
+		
+	/*Imprime valores verticais*/
+		LIS_IrInicioLista ( pDesenho->listaValoresV );
+		vezes = 0;	//Indica quantas vezes todas as listas foram percorridas
+		
+		do{
+			i=0;
+			while ( i < pDesenho->colunas ){
+
+				/*Obtem lista de valores da coluna atual*/
+				LIS_ObterValorCorrente ( pDesenho->listaValoresV, (void**)&lista );
+				LIS_IrInicioLista ( lista );
+
+				ret = LIS_PercorreLista ( lista, vezes );
+				
+				//Se ainda existem valores não impressos na lista atual
+				if ( ret == LIS_CondRetOK ){
+					
+					/*Obtem o número de células do valor*/
+					LIS_ObterValorCorrente ( lista, (void**)&valor );
+					VAL_obtemNumeroCelulas ( valor, &num_celulas );
+
+					//Imprime o valor
+					printf ("   %d  ", num_celulas);
+				}
+				
+				//Se acabaram os valores
+				else{
+				
+					listas_vazias++;
+
+					//Se todos os valores já foram impressos
+					if ( listas_vazias == pDesenho->colunas ){
+					
+						vezes = -1;	//Termina a verificação
+						break;
+					}
+				}
+
+				//Se chegou na última coluna
+				if ( i == pDesenho->colunas - 1 ){
+					vezes++;	//As listas foram percorridas mais uma vez
+					printf("\n");
+				}
+
+				LIS_PercorreLista ( pDesenho->listaValoresV, 1 );
+				i++;
+			}
+		}while ( vezes >= 0 );
+
+		return DES_CondRetOK;
+	}
 
 
 
