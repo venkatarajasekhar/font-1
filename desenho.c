@@ -298,7 +298,6 @@
 		int estado;					//Armazena o estado correto da célula
 		
 		//Ponteiros para os tipos utilizados
-		CEL_tppCelula celula = NULL ;
 		VAL_tppValor valor = NULL ;
 		LIS_tppLista LIS_linha_atual = NULL;
 		
@@ -321,14 +320,8 @@
 			//Para cada coluna
 			for ( j=0 ; j < pDesenho->colunas ; j++ ){
 				
-				//Na posição (i,j) da matriz
-				MAT_percorreMatriz ( pDesenho->matriz, i, j );
-				
-				//Obtem a célula
-				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
-				
 				//Obtem o estado correto da célula
-				CEL_obtemEstadoCorreto ( celula, &estado ) ;
+				estado = obtemEstadoCorretoCelula (i,j);
 				
 				//Se estado for nula
 				if ( estado == 0 ){
@@ -418,14 +411,8 @@
 			//Para cada linha
 			for ( i=0 ; i < pDesenho->linhas ; i++ ){
 				
-				//Na posição (i,j) da matriz
-				MAT_percorreMatriz ( pDesenho->matriz, i, j );
-				
-				//Obtem a célula
-				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
-				
 				//Obtem o estado correto da célula
-				CEL_obtemEstadoCorreto ( celula, &estado ) ;
+				estado = obtemEstadoCorretoCelula (i,j);
 				
 				//Se estado for nula
 				if ( estado == 0 ){
@@ -514,7 +501,6 @@
 		int num_celulas, estado_atual, estado_correto;
 
 		VAL_tppValor valor;
-		CEL_tppCelula celula;
 		LIS_tppLista lista;
 
 		LIS_tpCondRet retLis ;
@@ -542,18 +528,10 @@
 
 				//Obtem o número de células desse valor
 				VAL_obtemNumeroCelulas ( valor, &num_celulas );
-		
-			/*Obtem os estados da celula*/
-				
-				//Vai pra posição (i,j) da matriz
-				MAT_percorreMatriz ( pDesenho->matriz, i, j );
-
-				//Obtem a célula da posição (i,j)
-				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
-
-				//Obtem os estados da célula
-				CEL_obtemEstadoAtual ( celula, &estado_atual );
-				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+						
+				//Obtem os estados da celula
+				estado_atual = obtemEstadoAtualCelula (i,j);
+				estado_correto = obtemEstadoCorretoCelula (i,j);
 
 			/*Se a célula estiver marcada*/
 				if ( estado_atual == 1 ){
@@ -623,17 +601,9 @@
 				//Obtem o número de células desse valor
 				VAL_obtemNumeroCelulas ( valor, &num_celulas );
 		
-		/*Obtem os estados da celula*/
-				
-				//Vai pra posição (i,j) da matriz
-				MAT_percorreMatriz ( pDesenho->matriz, i, j );
-
-				//Obtem a célula da posição (i,j)
-				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
-
-				//Obtem os estados da célula
-				CEL_obtemEstadoAtual ( celula, &estado_atual );
-				CEL_obtemEstadoCorreto ( celula, &estado_correto );
+				//Obtem os estados da celula
+				estado_atual = obtemEstadoAtualCelula (i,j);
+				estado_correto = obtemEstadoCorretoCelula (i,j);
 
 		/*Se a célula estiver marcada*/
 				if ( estado_atual == 1 ){
@@ -1062,16 +1032,9 @@
 			//Para cada coluna
 			for ( j=0 ; j < pDesenho->colunas ; j++ ){
 
-		/*Obter os estados da célula (i,j)*/
-
-				MAT_percorreMatriz ( pDesenho->matriz, i, j );
-
-				//Obtem a célula
-				MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula );
-
-				//Obtem os estados
-				CEL_obtemEstadoAtual ( celula, &estado_atual) ;
-				CEL_obtemEstadoCorreto ( celula, &estado_correto);
+				//Obter os estados da célula (i,j)
+				estado_atual = obtemEstadoAtualCelula (i,j);
+				estado_correto = obtemEstadoCorretoCelula (i,j);
 
 				//Se a célula está incorreta
 				if ( estado_atual != estado_correto ){
