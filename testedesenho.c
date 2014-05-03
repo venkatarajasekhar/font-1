@@ -51,6 +51,7 @@
 #define		CARREGAR_CMD		"=carregar"
 #define		CONFERE_DES_CMD		"=conferedes"
 #define		USAR_DICA_CMD		"=dica"
+#define		IMPRIME_DES_CMD		"=imprime"
 
 
 
@@ -79,7 +80,7 @@
 *		=carregar		CondRetEsp		nome	
 *		=conferedes		CondRetEsp			
 *		=dica			CondRetEsp		
-*		
+*		=imprime		CondRetEsp		modo
 *
 *************************************************************************/
 
@@ -93,7 +94,8 @@
 						CondRetEsperada	;
 
 		char nome	[MAX_STRING];	//String passada pelo usuário
-		char estado ;
+		char estado = '?';
+		char modo	= '?';
 	
 		/* Testar DES_criaDesenho */
 		if ( strcmp(ComandoTeste, CRIAR_DES_CMD) == 0 ){
@@ -246,6 +248,20 @@
 									"Condição de retorno incompatível ao usar dica");
 		} //Fim Testar DES_usaDica
 	
+		/*Testar DES_imprimeDesenho*/
+		else if ( strcmp(ComandoTeste, IMPRIME_DES_CMD) == 0 ){
+
+			numLidos = LER_LerParametros("ic", &CondRetEsperada, &modo );
+
+			if (numLidos != 2 )
+				return TST_CondRetParm ;
+
+			CondRetObtida = DES_imprimeDesenho ( modo );
+
+			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
+									"Condição de retorno incompatível ao imprimir desenho");
+		} //Fim Testar DES_imprimeDesenho
+
 		return TST_CondRetNaoConhec ;
 	}
 

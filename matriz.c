@@ -217,14 +217,14 @@ MAT_tpCondRet MAT_criaMatriz ( MAT_tppMatriz* refMatriz, int linhas, int colunas
 			pMatriz->pElemCorrente = pMatriz->pElemInicial ;
 
 			//Anda com o corrente até a linha correta
-			while ( linha != 0 ){
+			while ( linha > 0 ){
 				
 				pMatriz->pElemCorrente = pMatriz->pElemCorrente->pBaixo ;
 				linha--;
 			}
 
 			//Anda com o corrente até a coluna correta
-			while ( coluna != 0 ){
+			while ( coluna > 0 ){
 					
 				pMatriz->pElemCorrente = pMatriz->pElemCorrente->pDir ;
 				coluna--;

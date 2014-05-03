@@ -173,7 +173,6 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 	VAL_tpCondRet VAL_defineSolucao ( VAL_tppValor pValor, int solucao ) ;
 
 
-
 /***********************************************************************
 *
 *	$FC Função:	VAL Obtem Número de Células

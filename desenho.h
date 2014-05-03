@@ -18,6 +18,7 @@
 *	Versão	Autor	Data		Observações
 *	1.0		vyc		11/04/2014	Início do desenvolvimento
 *	2.0		vyc		14/04/2014	Correções
+*	3.0		vyc		27/04/2014	Otimização
 *
 *	$ED Descrição do módulo
 *		Este é o módulo responsável pela criação e manipulação
@@ -74,7 +75,15 @@
 			DES_CondRetSemHints = 7,
 			/*Todas as dicas já foram utilizadas*/
 
-			DES_CondRetFaltouMemoria = 8
+			DES_CondRetLinhaSemValor = 8,
+			/*Existe uma linha em que todas as células 
+									estão desmarcadas*/
+			
+			DES_CondRetColunaSemValor = 9,
+			/*Existe uma coluna em que todas as células
+									estão desmarcadas*/
+
+			DES_CondRetFaltouMemoria = 10
 			/* Faltou memória ao alocar dados */
 
 	} DES_tpCondRet ;
@@ -207,6 +216,8 @@
 *	$FV Valor retornado
 *		DES_CondRetOK
 *		DES_CondRetFaltouMemoria
+*		DES_CondRetLinhaSemValor		
+*		DES_CondRetColunaSemValor
 *
 *   $AE Assertivas de entrada 
 *		O desenho foi criado
@@ -346,6 +357,34 @@
 **********************************************************************/
 
 	DES_tpCondRet DES_usaDica( void );
+
+
+/**********************************************************************
+*
+*	$FC Função:	DES Imprime Desenho
+*
+*	$ED Descrição da função
+*		Imprime na tela as informações do desenho 
+*		referentes ao modo especificado no parâmetro.
+*
+*	$EP Parâmetros
+*		modo -	caracter que indica o modo de impressão utilizado:
+				'd' para modo DESAFIO
+				'p' para modo PROJETO
+*
+*	$FV Valor retornado
+*		DES_CondRetOK
+*
+*   $AE Assertivas de entrada 
+*		O desenho existe.
+*		modo corresponde ao caracter 'd' ou 'p'.
+*
+*	$AS Assertivas de saída
+*		As informações do desenho foram impressas na tela.
+*
+**********************************************************************/
+
+	DES_tpCondRet DES_imprimeDesenho ( char modo );
 
 
 

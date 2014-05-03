@@ -53,90 +53,102 @@
 ***************************************************************************/
 
 	JOG_tpCondRet main (void){
-	
-		int opcao;
+		
+		int i, j, k, colunas, linhas;
+		char aux = 'd';
+		char aux2 = 'd';
 
-	/*Menu Principal*/
-		do{
-			printf("\n\nIniciar Nonogram no modo:\n 1-Projeto\n 2-Desafio\n 3-Sair\n\n");
-			scanf(" %d",&opcao);
-			switch (opcao){
-			
-			/*Modo Projeto*/
-				case 1:
-				{
-					int linhas,colunas;
-					char nome[54];
-					JOG_tpCondRet ret;
-					DES_tpCondRet retDes;
+		DES_criaDesenho ( 3, 3, "d1");
+		DES_modificaCelulaAtual ( 3, 3, aux);
+		DES_modificaCelulaAtual ( 3, 2, aux);
+		DES_imprimeDesenho ( aux2 );
 
-					//Menu do modo Projeto
-					printf("\nQual o tamanho do jogo? (NxN)\n");
-					scanf("%d%c%d",&linhas, nome, &colunas);
-					printf("\nQue nome voce gostaria de dar para esse jogo?\n");
-					scanf(" %s",nome);
-					
-					//Inicializa modo projeto
-					retDes = DES_criaDesenho(linhas,colunas, nome);
-					if ( retDes /*alguma treta*/ ){
-					}
+	//	int opcao;
 
-					//TODO: EXIBE GRID VAZIA
-					
-					//Imprime ajuda
-					imprimeAjudaProjeto();
+	//*Menu Principal*/
+	//	do{
+	//		printf("\n\nIniciar Nonogram no modo:\n 1-Projeto\n 2-Desafio\n 3-Sair\n\n");
+	//		scanf(" %d",&opcao);
+	//		switch (opcao){
+	//		
+	//		/*Modo Projeto*/
+	//			case 1:
+	//			{
+	//				int linhas,colunas;
+	//				char nome[54];
+	//				JOG_tpCondRet ret;
+	//				DES_tpCondRet retDes;
 
-					//Confere os comandos do usuário
-				//	ret = confereComandosProjeto();
-				//	if ( ret /*alguma coisa*/ ){
-				//	}
+	//				//Menu do modo Projeto
+	//				printf("\nQual o tamanho do jogo? (NxN)\n");
+	//				scanf("%d%c%d",&linhas, nome, &colunas);
 
-					break;
-				}
+					//TODO: confere se linhas && colunas > 0
 
-			/*Modo Desafio*/
-				case 2:
-				{
-					char nome[54];
-					JOG_tpCondRet retJog;
-					DES_tpCondRet retDes;
-					
-					//Menu do modo Desafio
-					printf("\nDigite o nome do jogo a ser carregado:\n");
-					scanf(" %s",nome);
+	//				printf("\nQue nome voce gostaria de dar para esse jogo?\n");
+	//				scanf(" %s",nome);
+	//				
+	//				//Inicializa modo projeto
+	//				retDes = DES_criaDesenho(linhas,colunas, nome);
+	//				if ( retDes /*alguma treta*/ ){
+	//				}
 
-					//Carrega o desenho pedido
-					retDes = DES_carregaDesenho ( nome );
-					if ( retDes /*alguma treta*/ ){
-					}
+	//				//TODO: EXIBE GRID VAZIA
+	//				
+	//				//Imprime ajuda
+	//				imprimeAjudaProjeto();
 
-					//TODO: IMPRIME GRID VAZIA COM VALORES
+	//				//Confere os comandos do usuário
+	//			//	ret = confereComandosProjeto();
+	//			//	if ( ret /*alguma coisa*/ ){
+	//			//	}
 
-					//Imprime ajuda
-					imprimeAjudaDesafio();
+	//				break;
+	//			}
 
-					//Confere os comandos do usuário
-				//	ret = confereComandosDesafio();
-				//	if ( ret /*alguma coisa*/ ){
-				//	}
+	//		/*Modo Desafio*/
+	//			case 2:
+	//			{
+	//				char nome[54];
+	//				JOG_tpCondRet retJog;
+	//				DES_tpCondRet retDes;
+	//				
+	//				//Menu do modo Desafio
+	//				printf("\nDigite o nome do jogo a ser carregado:\n");
+	//				scanf(" %s",nome);
 
-					break;
-				}
+	//				//Carrega o desenho pedido
+	//				retDes = DES_carregaDesenho ( nome );
+	//				if ( retDes /*alguma treta*/ ){
+	//				}
 
-			/*Usuário sai do programa*/
-				case 3:
-				{
-					return JOG_CondRetEncerrar;
-				}
+	//				//TODO: IMPRIME GRID VAZIA COM VALORES
 
-			/*Usuário digita comando inexistente*/
-				default:
-				{
-					printf("\nComando incorreto\n");
-					break;
-				}
-			}
-		} while (opcao != 3 );
+	//				//Imprime ajuda
+	//				imprimeAjudaDesafio();
+
+	//				//Confere os comandos do usuário
+	//			//	ret = confereComandosDesafio();
+	//			//	if ( ret /*alguma coisa*/ ){
+	//			//	}
+
+	//				break;
+	//			}
+
+	//		/*Usuário sai do programa*/
+	//			case 3:
+	//			{
+	//				return JOG_CondRetEncerrar;
+	//			}
+
+	//		/*Usuário digita comando inexistente*/
+	//			default:
+	//			{
+	//				printf("\nComando incorreto\n");
+	//				break;
+	//			}
+	//		}
+	//	} while (opcao != 3 );
 	}
 
 /**************************************************************************
