@@ -83,7 +83,10 @@
 			/*Existe uma coluna em que todas as células
 									estão desmarcadas*/
 
-			DES_CondRetFaltouMemoria = 10
+			DES_CondRetDimensoesInvalidas = 10,
+			/*As dimensões fornecidas estão fora do limite*/
+
+			DES_CondRetFaltouMemoria = 11
 			/* Faltou memória ao alocar dados */
 
 	} DES_tpCondRet ;
@@ -158,6 +161,7 @@
 *
 *	$FV Valor retornado
 *		DES_CondRetOK
+*		DES_CondRetDimensoesInvalidas
 *		DES_CondRetEstadoInvalido;
 *
 *   $AE Assertivas de entrada
@@ -190,6 +194,7 @@
 *
 *	$FV Valor retornado
 *		DES_CondRetOK
+*		DES_CondRetDimensoesInvalidas
 *		DES_CondRetEstadoInvalido;
 *
 *   $AE Assertivas de entrada
@@ -216,6 +221,7 @@
 *	$FV Valor retornado
 *		DES_CondRetOK
 *		DES_CondRetFaltouMemoria
+*		DES_CondRetCelulaNula;
 *		DES_CondRetLinhaSemValor		
 *		DES_CondRetColunaSemValor
 *

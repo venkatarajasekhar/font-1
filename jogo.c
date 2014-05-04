@@ -23,6 +23,7 @@
 /********************* Diretivas de Pré-Processamento *********************/
 
 #include	<stdio.h>
+#include	<string.h>
 
 #include	"celula.h"
 #include	"valor.h"
@@ -40,8 +41,8 @@
 	JOG_tpCondRet main (void);
 	void imprimeAjudaProjeto( void );
 	void imprimeAjudaDesafio( void );
-	JOG_tpCondRet confereComandosProjeto( void );
-	JOG_tpCondRet confereComandosDesafio( void );
+	void confereComandosProjeto( void );
+	void confereComandosDesafio( void );
 
 
 /*************** Código das funções encapsuladas no módulo ****************/
@@ -54,101 +55,99 @@
 
 	JOG_tpCondRet main (void){
 		
-		int i, j, k, colunas, linhas;
-		char aux = 'd';
-		char aux2 = 'd';
+		int i, j, k, colunas, linhas, opcao;
 
-		DES_criaDesenho ( 3, 3, "d1");
-		DES_modificaCelulaAtual ( 3, 3, aux);
-		DES_modificaCelulaAtual ( 3, 2, aux);
-		DES_imprimeDesenho ( aux2 );
+	/*Menu Principal*/
+		do{
+			printf("\n\nIniciar Nonogram no modo:\n 1-Projeto\n 2-Desafio\n 3-Sair\n\n");
+			scanf(" %d",&opcao);
+			switch (opcao){
+			
+			/*Modo Projeto*/
+				case 1:
+				{
+					int linhas,colunas;
+					char nome[54];
+					JOG_tpCondRet ret;
+					DES_tpCondRet retDes;
 
-	//	int opcao;
+					//Menu do modo Projeto
+					printf("\nQuais as dimensoes do desenho? (NxN)\n");
+					scanf("%d%*c%d",&linhas, &colunas);
 
-	//*Menu Principal*/
-	//	do{
-	//		printf("\n\nIniciar Nonogram no modo:\n 1-Projeto\n 2-Desafio\n 3-Sair\n\n");
-	//		scanf(" %d",&opcao);
-	//		switch (opcao){
-	//		
-	//		/*Modo Projeto*/
-	//			case 1:
-	//			{
-	//				int linhas,colunas;
-	//				char nome[54];
-	//				JOG_tpCondRet ret;
-	//				DES_tpCondRet retDes;
+					if ( linhas <= 0 || colunas <= 0 ){
+					
+						printf ("\nDimensoes nao suportadas\n");
+						break;
+					}
 
-	//				//Menu do modo Projeto
-	//				printf("\nQual o tamanho do jogo? (NxN)\n");
-	//				scanf("%d%c%d",&linhas, nome, &colunas);
+					printf("\nQue nome voce gostaria de dar para esse jogo?\n");
+					scanf(" %s",nome);
+					printf ("\n");
+					
+					//Inicializa modo projeto
+					retDes = DES_criaDesenho(linhas,colunas, nome);
+					if ( retDes != DES_CondRetOK ){
 
-					//TODO: confere se linhas && colunas > 0
+						printf ("\nErro na criação do desenho\n");
+						break;
+					}
 
-	//				printf("\nQue nome voce gostaria de dar para esse jogo?\n");
-	//				scanf(" %s",nome);
-	//				
-	//				//Inicializa modo projeto
-	//				retDes = DES_criaDesenho(linhas,colunas, nome);
-	//				if ( retDes /*alguma treta*/ ){
-	//				}
+					DES_imprimeDesenhoProjeto();
+					
+					//Imprime ajuda
+					imprimeAjudaProjeto();
 
-	//				//TODO: EXIBE GRID VAZIA
-	//				
-	//				//Imprime ajuda
-	//				imprimeAjudaProjeto();
+					//Confere os comandos do usuário
+					confereComandosProjeto();
 
-	//				//Confere os comandos do usuário
-	//			//	ret = confereComandosProjeto();
-	//			//	if ( ret /*alguma coisa*/ ){
-	//			//	}
+					break;
+				}
 
-	//				break;
-	//			}
+			/*Modo Desafio*/
+				case 2:
+				{
+					char nome[54];
+					JOG_tpCondRet retJog;
+					DES_tpCondRet retDes;
+				
+					//Menu do modo Desafio
+					printf("\nDigite o nome do jogo a ser carregado:\n");
+					scanf(" %s",nome);
 
-	//		/*Modo Desafio*/
-	//			case 2:
-	//			{
-	//				char nome[54];
-	//				JOG_tpCondRet retJog;
-	//				DES_tpCondRet retDes;
-	//				
-	//				//Menu do modo Desafio
-	//				printf("\nDigite o nome do jogo a ser carregado:\n");
-	//				scanf(" %s",nome);
+					//Carrega o desenho pedido
+					retDes = DES_carregaDesenho ( nome );
+					if ( retDes != DES_CondRetOK ){
 
-	//				//Carrega o desenho pedido
-	//				retDes = DES_carregaDesenho ( nome );
-	//				if ( retDes /*alguma treta*/ ){
-	//				}
+						printf ("\nErro ao carregar o desenho\n");
+						break;
+					}
 
-	//				//TODO: IMPRIME GRID VAZIA COM VALORES
+					//TODO: IMPRIME GRID VAZIA COM VALORES
 
-	//				//Imprime ajuda
-	//				imprimeAjudaDesafio();
+					//Imprime ajuda
+					imprimeAjudaDesafio();
 
-	//				//Confere os comandos do usuário
-	//			//	ret = confereComandosDesafio();
-	//			//	if ( ret /*alguma coisa*/ ){
-	//			//	}
+					//Confere os comandos do usuário
+					confereComandosDesafio();
 
-	//				break;
-	//			}
+					break;
+				}
 
-	//		/*Usuário sai do programa*/
-	//			case 3:
-	//			{
-	//				return JOG_CondRetEncerrar;
-	//			}
+			/*Usuário sai do programa*/
+				case 3:
+				{
+					return JOG_CondRetEncerrar;
+				}
 
-	//		/*Usuário digita comando inexistente*/
-	//			default:
-	//			{
-	//				printf("\nComando incorreto\n");
-	//				break;
-	//			}
-	//		}
-	//	} while (opcao != 3 );
+			/*Usuário digita comando inexistente*/
+				default:
+				{
+					printf("\nComando incorreto\n");
+					break;
+				}
+			}
+		} while (opcao != 3 );
 	}
 
 /**************************************************************************
@@ -163,8 +162,9 @@
 		printf("marcar NxN: muda o estado da celula NxN para MARCADA\n");
 		printf("desmarcar NxN: muda o estado da celula NxN para DESMARCADA\n");
 		printf("nulo NxN: muda o estado da celula NxN para NULO\n");
-		printf("salvar 'nome': se não existir nenhuma celula nula, salva o projeto atual\ncom o nome especificado");
-		printf("sair: retorna para o menu principal");
+		printf("salvar: se nao existir nenhuma celula nula, salva o projeto atual\n");
+		printf("atualizar: atualiza o desenho na tela\n");
+		printf("sair: abandona o projeto atual e volta para o menu principal\n\n");
 	}
 
 
@@ -180,10 +180,11 @@
 		printf("marcar NxN: muda o estado da celula NxN para MARCADA\n");
 		printf("desmarcar NxN: muda o estado da celula NxN para DESMARCADA\n");
 		printf("nulo NxN: muda o estado da celula NxN para NULO\n");
-		printf("dica: marca 1 celula no desenho corretamente. Cada jogo permite ate 10 dicas");
-		printf("salvar 'nome': salva o estado atual do jogo em um arquivo com o nome especificado");
-		printf("fim: confere se o desenho foi preenchido corretamente");
-		printf("sair: retorna para o menu principal");
+		printf("dica: marca 1 celula no desenho corretamente. Cada jogo permite ate 10 dicas\n");
+		printf("salvar 'nome': salva o estado atual do jogo em um arquivo com o nome especificado\n");
+		printf("fim: confere se o desenho foi preenchido corretamente\n");
+		printf("atualizar: atualiza o desenho na tela\n");
+		printf("sair: retorna para o menu principal\n\n");
 	}
 
 
@@ -193,8 +194,110 @@
 *
 ***************************************************************************/
 
-	JOG_tpCondRet confereComandosProjeto ( void ){
+	void confereComandosProjeto ( void ){
 	
+		char comando[54];
+		int linha, coluna;
+		int ret = 0;
+		DES_tpCondRet retDes;
+		
+		do{
+
+			//Lê comando
+			scanf (" %s", comando);
+		
+			//Marcar
+			if ( strcmp ( comando, "marcar") == 0 ){
+
+					scanf (" %d%*c%d", &linha,&coluna );
+
+					retDes = DES_modificaCelulaCorreto ( linha, coluna, 'm');
+					if ( retDes == DES_CondRetDimensoesInvalidas )
+						printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Desmarcar
+			else if ( strcmp ( comando, "desmarcar") == 0 ){
+
+				scanf (" %d%*c%d", &linha,&coluna );
+
+				retDes = DES_modificaCelulaCorreto ( linha, coluna, 'd');
+				if ( retDes == DES_CondRetDimensoesInvalidas )
+					printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Nula
+			else if ( strcmp ( comando, "nula") == 0 ){
+
+				scanf (" %d%*c%d", &linha,&coluna );
+
+				retDes = DES_modificaCelulaCorreto ( linha, coluna, 'n');
+				if ( retDes == DES_CondRetDimensoesInvalidas )
+					printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Salvar
+			else if ( strcmp ( comando, "salvar") == 0 ){
+
+			/*Calcula Valores*/
+				retDes = DES_calculaValores();
+
+				//Se existe uma linha vazia
+				if ( retDes == DES_CondRetLinhaSemValor ){
+					printf ("\nTodas as linhas devem ter ao menos uma celula marcada\n");
+				}
+				
+				//Se existe uma coluna vazia
+				else if ( retDes == DES_CondRetColunaSemValor ){
+					printf ("\nTodas as colunas devem ter ao menos uma celula marcada\n");
+				}
+
+				//Se deu erro de memória
+				else if ( retDes == DES_CondRetFaltouMemoria ){
+					printf ("\nErro de alocacao de memoria\n");
+				}
+
+				//Se existem celulas nulas
+				else if ( retDes == DES_CondRetCelulaNula ){
+					printf ("\nO desenho não pode conter celulas nulas\n");
+				}
+				
+				//Se OK
+				else{
+					
+					//Salva desenho
+					retDes = DES_salvaDesenho ();
+					if ( retDes == DES_CondRetErroAberturaArquivo )
+						printf ("\nErro na criacao do arquivo\n");
+
+					//Destroi desenho
+					DES_destroiDesenho();
+
+					//Sai da função
+					ret = -1;
+				}
+			}
+			
+			//Atualizar
+			else if ( strcmp ( comando, "atualizar") == 0 ){
+				
+				printf("\n");
+				DES_imprimeDesenhoProjeto();
+				printf("\n");
+			}
+
+			//Sair
+			else if ( strcmp ( comando, "sair") == 0 ){
+
+				DES_destroiDesenho();
+				ret = -1;
+			}
+
+			//Comando Inválido
+			else{
+				printf ("\nComando Invalido\n");
+			}
+		}while ( ret >= 0 );
 	}
 
 
@@ -204,7 +307,7 @@
 *
 ***************************************************************************/
 
-	JOG_tpCondRet confereComandosDesafio ( void ){
+	void confereComandosDesafio ( void ){
 	
 	}
 

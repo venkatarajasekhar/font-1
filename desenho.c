@@ -223,6 +223,10 @@
 	DES_tpCondRet DES_modificaCelulaCorreto ( int linha, int coluna, char estado ){
 		
 		CEL_tppCelula celula = NULL;
+
+		//Confere se as dimensões estão dentro do limite
+		if ( ( linha <= 0 || linha > pDesenho->linhas ) || ( coluna <=0 || coluna > pDesenho->colunas ) )			
+			return DES_CondRetDimensoesInvalidas;
 		
 		/* Obtem a célula da posição (linha,coluna) */
 		MAT_percorreMatriz ( pDesenho->matriz, linha-1, coluna-1 );
@@ -260,6 +264,10 @@
 	
 		CEL_tppCelula celula = NULL;
 		
+		//Confere se as dimensões estão dentro do limite
+		if ( ( linha <= 0 || linha > pDesenho->linhas ) || ( coluna <=0 || coluna > pDesenho->colunas ) )
+			return DES_CondRetDimensoesInvalidas;
+
 		/* Obtem a célula da posição (linha,coluna) */
 		MAT_percorreMatriz ( pDesenho->matriz, linha-1, coluna-1 );
 		MAT_obterValorCorrente ( pDesenho->matriz, (void**)&celula);
