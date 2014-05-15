@@ -11,12 +11,14 @@
 *	Projeto:	Disciplinas INF 1301
 *	Gestor:		Flavio Bevilacqua
 *	Autores:	vyc, Victor Yves Crispim
-*				sa, Sérgio Argolo
+*				sa, Sergio Argolo
 *				ft, Francisco Tacora
 *
 *	$HA Histórico de evolução:
 *	Versão	Autor	Data		Observações
 *	1.0		vyc		30/03/2014	Início do desenvolvimento
+*	2.0		sa		01/05/2014	Revisão das funções
+*	3.0		sa		04/05/2014	Revisão das funções
 *
 *	$ED Descrição do módulo
 *		Implementa listas genéricas duplamente encadeadas.
@@ -37,7 +39,6 @@
 *		Caso essa função seja NULL, os dados não são desalocados.
 *
 ***************************************************************************/
-
 
 
 /********************* Diretivas de Pré-Processamento *********************/
@@ -72,10 +73,15 @@ typedef struct LIS_tagLista* LIS_tppLista ;
 		LIS_CondRetFimLista = 2 ,
 			/* Foi atingido o fim de lista */
 	
-		LIS_CondRetFaltouMemoria = 3
+		LIS_CondRetFaltouMemoria = 3,
 			/* Faltou memória ao tentar criar um elemento de lista */
+
+		LIS_CondRetListaInexistente = 4,
+		/* Lista inexistente, ponteiro é NULL */
 	
 	} LIS_tpCondRet ;
+
+
 
 /***************************************************************************
 *
@@ -107,7 +113,7 @@ typedef struct LIS_tagLista* LIS_tppLista ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void * pDado) );
+	LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void * pDado) );
 
 
 /***************************************************************************
@@ -123,6 +129,7 @@ LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void
 *
 *	$FV Valor retornado
 *		LIS_CondRetOK
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida.
@@ -134,7 +141,7 @@ LIS_tpCondRet LIS_CriarLista (	LIS_tppLista * refLista, void(*ExcluirValor)(void
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_ObterNumElem ( LIS_tppLista pLista, int * refNum ) ; 
+	LIS_tpCondRet LIS_ObterNumElem ( LIS_tppLista pLista, int * refNum ) ; 
 
 
 /***************************************************************************
@@ -151,6 +158,7 @@ LIS_tpCondRet LIS_ObterNumElem ( LIS_tppLista pLista, int * refNum ) ;
 *
 *	$FV Valor retornado
 *		LIS_CondRetOK
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista que existe.
@@ -160,7 +168,7 @@ LIS_tpCondRet LIS_ObterNumElem ( LIS_tppLista pLista, int * refNum ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
+	LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
 
 
 /***************************************************************************
@@ -175,6 +183,8 @@ LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
 *
 *	$FV Valor retornado
 *		LIS_CondRetOK
+*		LIS_CondRetListaInexistente
+*		LIS_CondRetListaVazia
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida que deve ser esvaziada.
@@ -184,7 +194,7 @@ LIS_tpCondRet LIS_DestruirLista ( LIS_tppLista pLista ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_EsvaziarLista ( LIS_tppLista pLista ) ;
+	LIS_tpCondRet LIS_EsvaziarLista ( LIS_tppLista pLista ) ;
 
 
 /***************************************************************************
@@ -203,6 +213,7 @@ LIS_tpCondRet LIS_EsvaziarLista ( LIS_tppLista pLista ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetFaltouMemoria
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida.
@@ -215,7 +226,7 @@ LIS_tpCondRet LIS_EsvaziarLista ( LIS_tppLista pLista ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
+	LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
 
 
 /***************************************************************************
@@ -234,6 +245,7 @@ LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetFaltouMemoria
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida.
@@ -246,7 +258,7 @@ LIS_tpCondRet LIS_InserirElementoAntes ( LIS_tppLista pLista , void * pValor ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) ;
+	LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) ;
 
 
 /***************************************************************************
@@ -265,6 +277,7 @@ LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida não vazia.
@@ -277,7 +290,7 @@ LIS_tpCondRet LIS_InserirElementoApos ( LIS_tppLista pLista	, void * pValor ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
+	LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
 
 
 /***************************************************************************
@@ -294,6 +307,7 @@ LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida não vazia.
@@ -307,7 +321,7 @@ LIS_tpCondRet LIS_ExcluirElemento ( LIS_tppLista pLista ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) ;
+	LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) ;
 
 
 /***************************************************************************
@@ -323,6 +337,7 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida não vazia.
@@ -333,7 +348,7 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *
 ***************************************************************************/
 
- LIS_tpCondRet LIS_IrInicioLista ( LIS_tppLista pLista ) ;
+	LIS_tpCondRet LIS_IrInicioLista ( LIS_tppLista pLista ) ;
 
 
 /***************************************************************************
@@ -349,6 +364,7 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *	$FV Valor retornado
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida não vazia.
@@ -359,7 +375,7 @@ LIS_tpCondRet LIS_ObterValorCorrente ( LIS_tppLista pLista , void ** refValor ) 
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_IrFinalLista ( LIS_tppLista pLista ) ;
+	LIS_tpCondRet LIS_IrFinalLista ( LIS_tppLista pLista ) ;
 
 
 /***************************************************************************
@@ -382,6 +398,7 @@ LIS_tpCondRet LIS_IrFinalLista ( LIS_tppLista pLista ) ;
 *		LIS_CondRetOK
 *		LIS_CondRetListaVazia
 *		LIS_CondRetFimLista
+*		LIS_CondRetListaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pLista aponta para a lista válida.
@@ -398,7 +415,7 @@ LIS_tpCondRet LIS_IrFinalLista ( LIS_tppLista pLista ) ;
 *
 ***************************************************************************/
 
-LIS_tpCondRet LIS_PercorreLista ( LIS_tppLista pLista , int numElem ) ;
+	LIS_tpCondRet LIS_PercorreLista ( LIS_tppLista pLista , int numElem ) ;
 
 
 

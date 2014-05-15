@@ -87,7 +87,7 @@
 *	Função: VAL Confere Solução
 */
 
-	VAL_tpCondRet VAL_confereSolução ( VAL_tppValor pValor, int* pSolucao ){
+	VAL_tpCondRet VAL_confereSolucao ( VAL_tppValor pValor, int* pSolucao ){
 
 		*pSolucao = pValor->resolvido;
 

@@ -1,7 +1,7 @@
 /***************************************************************************
 *  $MCI Módulo de implementação: Teste específico para módulo célula
 *
-*  Arquivo gerado:              TESTCEL.C
+*  Arquivo gerado:              testecelula.c
 *  Letras identificadoras:      TCEL
 *
 *  Nome da base de software:    Exemplo de teste automatizado
@@ -18,6 +18,8 @@
 *		1.0		vyc		30/03/2014	Início do desenvolvimento
 *		2.0		sa		06/04/2014	Desenvolvimento dos testes 
 *       3.0     sa      15/04/2014  Revisão dos testes
+*		4.0		sa		04/05/2014	Revisão dos testes 
+*		5.0		sa		08/05/2014	Revisão dos testes
 *
 *  $ED Descrição do módulo
 *     Este módulo contém as funções específicas para o teste do
@@ -47,7 +49,7 @@ static CEL_tppCelula pCelula = NULL;
 #define     ALTERAR_EST_CORRETO_CMD   "=alterarestadocorreto"
 #define     DESTRUIR_CEL_CMD          "=destruir"
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/************* Código das funções exportadas pelo módulo **************/
 
 /***********************************************************************
 *
@@ -84,9 +86,9 @@ static CEL_tppCelula pCelula = NULL;
       CEL_tpCondRet CondRetEsperada = CEL_CondRetFaltouMemoria ;
       
       int ValorDado     = -1 ; 
-      int  NumLidos = -1 ;
+      int NumLidos		= -1 ;
 	  int ValorEsperado = -1 ;
-	  int ValorObtido = -1 ;
+	  int ValorObtido	= -1 ;
 
       TST_tpCondRet Ret ;
 
@@ -211,6 +213,8 @@ static CEL_tppCelula pCelula = NULL;
 
             CondRetObtida = CEL_destroiCelula( pCelula ) ;
 
+			pCelula = NULL; // setar ponteiro para null após destruir célula
+
             return TST_CompararInt( CondRetEsperada , CondRetObtida ,
                                     "Retorno errado ao destruir Celula." );
 
@@ -220,8 +224,3 @@ static CEL_tppCelula pCelula = NULL;
    }/* Fim função: TCEL Efetuar operações de teste específicas para célula */
   
 /********** Fim do módulo de implementação: Módulo de teste específico **********/
-
-
-
-
-

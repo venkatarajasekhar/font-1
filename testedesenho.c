@@ -53,6 +53,7 @@
 #define		USAR_DICA_CMD		"=dica"
 #define		IMPRIME_PROJ_CMD	"=imprimeproj"
 #define		IMPRIME_DES_CMD		"=imprimedes"
+#define		RESETA_DES_CMD		"=resetades"
 
 
 
@@ -83,6 +84,7 @@
 *		=dica			CondRetEsp		
 *		=imprimeproj	CondRetEsp
 *		=imprimedes		CondRetEsp
+*		=resetades		CondRetEsp
 *
 *************************************************************************/
 
@@ -277,6 +279,20 @@
 			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
 									"Condição de retorno incompatível ao imprimir desenho no modo desafio");
 		} //Fim Testar DES_imprimeDesenhoDesafio
+
+		/*Testar DES_resetaDesenho*/
+		else if ( strcmp(ComandoTeste, RESETA_DES_CMD) == 0 ){
+
+			numLidos = LER_LerParametros("i", &CondRetEsperada );
+
+			if (numLidos != 1 )
+				return TST_CondRetParm ;
+
+			CondRetObtida = DES_resetaDesenho();
+
+			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
+									"Condição de retorno incompatível ao resetar desenho");
+		} //Fim Testar DES_resetaDesenho
 
 		return TST_CondRetNaoConhec ;
 	}

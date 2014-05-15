@@ -126,7 +126,7 @@ static VAL_tppValor pValor=NULL;
 				return TST_CondRetParm ;
 			} /* if*/
 
-			CondRetObtido = VAL_confereSolução ( pValor , &ValorObtido ) ;
+			CondRetObtido = VAL_confereSolucao ( pValor , &ValorObtido ) ;
 
 			if ( CondRetObtido != VAL_CondRetOK ){
 			

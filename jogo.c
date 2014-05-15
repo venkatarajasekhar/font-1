@@ -55,10 +55,13 @@
 
 	JOG_tpCondRet main (void){
 		
-		int i, j, k, colunas, linhas, opcao;
+		int i, j, k, colunas, linhas, opcao, opcao2;
+		char nome[54];
+		DES_tpCondRet retDes;
 
 	/*Menu Principal*/
 		do{
+
 			printf("\n\nIniciar Nonogram no modo:\n 1-Projeto\n 2-Desafio\n 3-Sair\n\n");
 			scanf(" %d",&opcao);
 			switch (opcao){
@@ -66,40 +69,80 @@
 			/*Modo Projeto*/
 				case 1:
 				{
-					int linhas,colunas;
-					char nome[54];
-					JOG_tpCondRet ret;
-					DES_tpCondRet retDes;
 
-					//Menu do modo Projeto
-					printf("\nQuais as dimensoes do desenho? (NxN)\n");
-					scanf("%d%*c%d",&linhas, &colunas);
+				/*Menu do modo Projeto*/
+					printf("\n1-Criar novo\n2-Editar Existente\n\n");
+					scanf(" %d",&opcao2);
+	
+					switch ( opcao2 ){
 
-					if ( linhas <= 0 || colunas <= 0 ){
+						//Criar Novo
+						case 1:
+						{
+							printf("\nQuais as dimensoes do desenho? (NxN)\n");
+							scanf("%d%*c%d",&linhas, &colunas);
+
+							if ( linhas <= 0 || colunas <= 0 ){
 					
-						printf ("\nDimensoes nao suportadas\n");
-						break;
+								printf ("\nDimensoes nao suportadas\n");
+								break;
+							}
+
+							printf("\nQue nome voce gostaria de dar para esse jogo?\n");
+							scanf(" %s",nome);
+							printf ("\n");
+					
+							//Inicializa modo projeto
+							retDes = DES_criaDesenho(linhas,colunas, nome);
+							if ( retDes != DES_CondRetOK ){
+
+								printf ("\nErro na criação do desenho\n");
+								break;
+							}
+
+							DES_imprimeDesenhoProjeto();
+					
+							//Imprime ajuda
+							imprimeAjudaProjeto();
+
+							//Confere os comandos do usuário
+							confereComandosProjeto();
+
+							break;
+						}
+
+						//Editar Existente
+						case 2:
+						{
+							DES_tpCondRet retDes;
+
+							printf("\nDigite o nome do jogo a ser carregado:\n");
+							scanf(" %s",nome);
+
+							retDes = DES_carregaDesenho ( nome );
+							if ( retDes != DES_CondRetOK ){
+
+								printf ("\nErro ao carregar o desenho\n");
+								break;
+							}
+
+							DES_imprimeDesenhoProjeto();
+					
+							//Imprime ajuda
+							imprimeAjudaProjeto();
+
+							//Confere os comandos do usuário
+							confereComandosProjeto();
+
+							break;
+						}
+
+						default:
+						{
+							printf("\nComando incorreto\n");
+							break;
+						}
 					}
-
-					printf("\nQue nome voce gostaria de dar para esse jogo?\n");
-					scanf(" %s",nome);
-					printf ("\n");
-					
-					//Inicializa modo projeto
-					retDes = DES_criaDesenho(linhas,colunas, nome);
-					if ( retDes != DES_CondRetOK ){
-
-						printf ("\nErro na criação do desenho\n");
-						break;
-					}
-
-					DES_imprimeDesenhoProjeto();
-					
-					//Imprime ajuda
-					imprimeAjudaProjeto();
-
-					//Confere os comandos do usuário
-					confereComandosProjeto();
 
 					break;
 				}
@@ -107,11 +150,11 @@
 			/*Modo Desafio*/
 				case 2:
 				{
-					char nome[54];
-					JOG_tpCondRet retJog;
-					DES_tpCondRet retDes;
 				
-					//Menu do modo Desafio
+				/*Menu do modo Desafio*/
+					printf ("1-Carregar novo jogo\n2-Continuar jogo antigo\n\n");
+					scanf (" %d", &opcao2 );
+					
 					printf("\nDigite o nome do jogo a ser carregado:\n");
 					scanf(" %s",nome);
 
@@ -123,12 +166,15 @@
 						break;
 					}
 
-					//TODO: IMPRIME GRID VAZIA COM VALORES
+					//Se o usuário escolheu carregar um novo jogo
+					if ( opcao2 == 1 )
+						//Reseta o desenho, caso o arquivo contenha um jogo em andamento
+						DES_resetaDesenho();
 
-					//Imprime ajuda
+					DES_imprimeDesenhoDesafio();
+
 					imprimeAjudaDesafio();
 
-					//Confere os comandos do usuário
 					confereComandosDesafio();
 
 					break;
@@ -176,7 +222,7 @@
 
 	void imprimeAjudaDesafio ( void ){
 	
-		printf("\nComandos disponiveis:\n\n");
+		printf("\n\nComandos disponiveis:\n\n");
 		printf("marcar NxN: muda o estado da celula NxN para MARCADA\n");
 		printf("desmarcar NxN: muda o estado da celula NxN para DESMARCADA\n");
 		printf("nulo NxN: muda o estado da celula NxN para NULO\n");
@@ -309,6 +355,130 @@
 
 	void confereComandosDesafio ( void ){
 	
+		char comando[54];
+		int linha, coluna;
+		int ret = 0;
+		DES_tpCondRet retDes;
+		
+		do{
+
+			//Lê comando
+			scanf (" %s", comando);
+		
+			//Marcar
+			if ( strcmp ( comando, "marcar") == 0 ){
+
+					scanf (" %d%*c%d", &linha,&coluna );
+
+					retDes = DES_modificaCelulaAtual ( linha, coluna, 'm');
+					if ( retDes == DES_CondRetDimensoesInvalidas )
+						printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Desmarcar
+			else if ( strcmp ( comando, "desmarcar") == 0 ){
+
+				scanf (" %d%*c%d", &linha,&coluna );
+
+				retDes = DES_modificaCelulaAtual ( linha, coluna, 'd');
+				if ( retDes == DES_CondRetDimensoesInvalidas )
+					printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Nula
+			else if ( strcmp ( comando, "nula") == 0 ){
+
+				scanf (" %d%*c%d", &linha,&coluna );
+
+				retDes = DES_modificaCelulaAtual ( linha, coluna, 'n');
+				if ( retDes == DES_CondRetDimensoesInvalidas )
+					printf ("\nDimensões fora do desenho\n");
+			}
+
+			//Salvar
+			else if ( strcmp ( comando, "salvar") == 0 ){
+
+			/*Calcula Valores*/
+				retDes = DES_calculaValores();
+
+				//Se deu erro de memória
+				if ( retDes == DES_CondRetFaltouMemoria ){
+					printf ("\nErro de alocacao de memoria\n");
+				}
+					
+				//Salva desenho
+				retDes = DES_salvaDesenho ();
+				if ( retDes == DES_CondRetErroAberturaArquivo )
+					printf ("\nErro na criacao do arquivo\n");
+			}
+			
+			//Atualizar
+			else if ( strcmp ( comando, "atualizar") == 0 ){
+				
+				printf("\n");
+				DES_imprimeDesenhoDesafio();
+				printf("\n");
+			}
+
+			//Sair
+			else if ( strcmp ( comando, "sair") == 0 ){
+
+				DES_destroiDesenho();
+				ret = -1;
+			}
+
+			else if ( strcmp ( comando, "dica") == 0 ){
+
+				DES_usaDica();
+				printf("\n");
+				DES_imprimeDesenhoDesafio();
+				printf("\n");
+
+			}
+
+			else if ( strcmp ( comando, "fim") == 0 ){
+
+				retDes = DES_confereConclusaoDesenho();
+				if ( retDes == DES_CondRetDesenhoIncorreto ){
+				
+					printf("\nO desenho nao foi preenchido corretamente\n");
+				}
+				
+				else{
+
+					printf("                     _ /\\.'|_			\n");
+					printf("                 _.-| |\\ | / |_         \n");
+					printf("                / \\ _>-''''-._.'|_      \n");
+					printf("               >`-.'         `./ \\      \n");
+					printf("              /`./             \-<      \n");
+					printf("              `-|  PARABENS!!!  |_/      \n");
+					printf("              /_|      VOCE     |_\\    \n");
+					printf("              ) |      E O      | |      \n");
+					printf("              -<|      CARA     |\\/      \n");
+					printf("              `'_\\             /`<      \n");
+					printf("               |_/`.         .'\\_/      \n");
+					printf("                \\_/ >-.._..-'\\_|      \n");
+					printf("                  `-`_| \\_\\|_/      \n");
+					printf("                   |   `' |  |      \n");
+					printf("                   |      |  |      \n");
+					printf("                   |      |  |      \n");
+					printf("                   |      |  |      \n");
+					printf("                   |      |  |      \n");
+					printf("                   |  /\\  |  |      \n");
+					printf("                   | /| \\ |\\ |      \n");
+					printf("                   |/ |/ \\| \\|      \n");
+
+					system ("pause");
+					ret = -1;
+				}
+
+			}
+
+			//Comando Inválido
+			else
+				printf ("\nComando Invalido\n");
+
+		}while ( ret >= 0 );
 	}
 
 

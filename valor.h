@@ -57,8 +57,11 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 			VAL_CondRetOK = 0 ,
 			/* Executou corretamente */
 			
-			VAL_CondRetFaltouMemoria = 1
+			VAL_CondRetFaltouMemoria = 1 ,
 			/* Faltou memória ao alocar dados */
+
+			VAL_CondRetValorInexistente = 2
+			/*Nao criou o valor corretamente*/
 
 	} VAL_tpCondRet ;
 
@@ -144,7 +147,7 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *
 ***********************************************************************/
 
-	VAL_tpCondRet VAL_confereSolução ( VAL_tppValor pValor, int* pSolucao ) ;
+	VAL_tpCondRet VAL_confereSolucao ( VAL_tppValor pValor, int* pSolucao ) ;
 
 
 /***********************************************************************

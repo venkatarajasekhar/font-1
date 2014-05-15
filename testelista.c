@@ -16,6 +16,9 @@
 *	$HA Histórico de evolução:
 *		Versão	Autor	Data		Observações
 *		1.0		vyc		14/04/2014	Início do desenvolvimento
+*		2.0		sa		01/05/2014	Revisão dos testes
+*		3.0		sa		05/05/2014	Revisão dos testes
+*		4.0		sa		08/05/2014	Revisão dos testes	
 *
 *	$ED Descrição do módulo
 *		Este módulo contém as funções específicas para o teste do
@@ -168,6 +171,7 @@ static LIS_tppLista vtListas [MAX_VET_LIS] ;
 				return TST_CondRetParm ;
 
 			CondRetObtida = LIS_DestruirLista ( vtListas [idLista] ) ;
+			vtListas[idLista] = NULL ;
 
 			return TST_CompararInt (CondRetEsperada, CondRetObtida, 
 									"Condição de retorno incompatível ao destruir lista.") ;

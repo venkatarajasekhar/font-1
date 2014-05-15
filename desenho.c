@@ -714,7 +714,7 @@
 				LIS_ObterValorCorrente ( lista, (void**)&valor );
 				
 				//Obtem as informações do valor
-				VAL_confereSolução ( valor, &solucao ) ;
+				VAL_confereSolucao ( valor, &solucao ) ;
 				VAL_obtemNumeroCelulas ( valor, &numCelulas ) ;
 
 				fprintf( fpOut, " (%d, %d) ",solucao, numCelulas );
@@ -747,7 +747,7 @@
 				LIS_ObterValorCorrente ( lista, (void**)&valor);
 				
 				//Obtem as informações do valor
-				VAL_confereSolução ( valor, &solucao) ;
+				VAL_confereSolucao ( valor, &solucao) ;
 				VAL_obtemNumeroCelulas (valor, &numCelulas) ;
 
 				fprintf( fpOut, " (%d, %d) ",solucao, numCelulas);
@@ -1283,7 +1283,8 @@
 				
 				//Se acabaram os valores
 				else{
-				
+					
+					printf("      ");
 					listas_vazias++;
 
 					//Se todos os valores já foram impressos
@@ -1296,14 +1297,42 @@
 
 				//Se chegou na última coluna
 				if ( i == pDesenho->colunas - 1 ){
+					
 					vezes++;	//As listas foram percorridas mais uma vez
 					printf("\n");
+					LIS_IrInicioLista ( pDesenho->listaValoresV ); //Volta pra lista da 1º coluna
+					i=0;
+					continue;
 				}
 
 				LIS_PercorreLista ( pDesenho->listaValoresV, 1 );
 				i++;
 			}
 		}while ( vezes >= 0 );
+
+		return DES_CondRetOK;
+	}
+
+
+/************************************************************************
+*
+*  Função: DES Reseta Desenho
+*/
+
+	DES_tpCondRet DES_resetaDesenho ( void ){
+		
+		int i, j;
+
+		//Para cada linha
+		for ( i=0; i < pDesenho->linhas; i++ ){
+			
+			//Para cada coluna
+			for ( j=0; j < pDesenho->colunas; j++ ){
+			
+				DES_modificaCelulaAtual (i, j, 'n');
+
+			}
+		}
 
 		return DES_CondRetOK;
 	}

@@ -409,6 +409,27 @@
 	DES_tpCondRet DES_imprimeDesenhoDesafio ( void );
 
 
+/**********************************************************************
+*
+*	$FC Função:	DES Reseta Desenho
+*
+*	$ED Descrição da função
+*		Marca o estado atual das células do desenho como nulo.
+*
+*	$FV Valor retornado
+*		DES_CondRetOK
+*
+*   $AE Assertivas de entrada 
+*		O desenho existe.
+*
+*	$AS Assertivas de saída
+*		O estado atual das células do desenho é nulo.
+*
+**********************************************************************/
+
+	DES_tpCondRet DES_resetaDesenho ( void );
+
+
 
 /************Fim do módulo de definição: Módulo Desenho***************/
 

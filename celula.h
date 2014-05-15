@@ -11,18 +11,20 @@
 *	Projeto:	Disciplinas INF 1301
 *	Gestor:		Flavio Bevilacqua
 *	Autores:	vyc, Victor Yves Crispim
-*				sa, Sérgio Argolo
+*				sa, Sergio Argolo
 *				ft, Francisco Tacora
 *
 *	$HA Histórico de evolução:
 *	Versão	Autor	Data		Observações
 *	1.0		vyc		30/03/2014	Início do desenvolvimento
+*	2.0		sa		29/04/2014	Revisão das funções do módulo
+*	3.0		sa		03/05/2014	Revisão das funções do módulo
 *
 *	$ED Descrição do módulo
 *		Este módulo implementa um conjunto de funções para criar e
 *		manipular a estrutura célula, elemento básico do jogo Nonogram.
 *		Ela armazena o estado da célula de acordo com a entrada fornecida
-*		pelo usuário no modo Desafio, que pode ser: marcada, descartada e nulo.
+*		pelo usuário, que pode ser: marcada, descartada e nulo.
 *		Se o estado de uma célula é 1, ela pertence ao desenho.
 *		Se o estado de uma célula é 2, ela não pertence ao desenho.
 *		Se o estado de uma célula é 0, o usuário ainda não interagiu
@@ -56,13 +58,16 @@
 *
 ***********************************************************************/
 
-	typedef enum {
+		typedef enum {
 
 			CEL_CondRetOK = 0 ,
 			/* Executou corretamente */
 
-			CEL_CondRetFaltouMemoria = 1
+			CEL_CondRetFaltouMemoria = 1,
 			/* Faltou memória ao alocar dados */
+
+			CEL_CondRetCelulaInexistente = 2
+			/* Não criou a celula corretamente */
 
 	} CEL_tpCondRet ;
 
@@ -108,6 +113,7 @@
 *
 *	$FV Valor retornado
 *		CEL_CondRetOK
+*		CEL_CondRetCelulaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
@@ -135,6 +141,7 @@
 *
 *	$FV Valor retornado
 *		CEL_CondRetOK
+*		CEL_CondRetCelulaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
@@ -162,6 +169,7 @@
 *
 *	$FV Valor retornado
 *		CEL_CondRetOK
+*		CEL_CondRetCelulaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
@@ -189,6 +197,7 @@
 *
 *	$FV Valor retornado
 *		CEL_CondRetOK
+*		CEL_CondRetCelulaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
@@ -216,6 +225,7 @@
 *
 *	$FV Valor retornado
 *		CEL_CondRetOK
+*		CEL_CondRetCelulaInexistente
 *
 *   $AE Assertivas de entrada 
 *		pCelula aponta para uma célula válida.
