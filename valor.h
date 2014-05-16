@@ -60,8 +60,11 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 			VAL_CondRetFaltouMemoria = 1 ,
 			/* Faltou memória ao alocar dados */
 
-			VAL_CondRetValorInexistente = 2
-			/*Nao criou o valor corretamente*/
+			VAL_CondRetValorInexistente = 2,
+			/* O valor não existe */
+
+			VAL_CondRetSolucaoInvalida = 3
+			/* A solução fornecida está incorreta */
 
 	} VAL_tpCondRet ;
 
@@ -80,8 +83,8 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *						a que o valor se refere.
 *		
 *	$FV Valor retornado
-*		VAL_tpCondRetOK
-*		VAL_tpCondRetFaltouMemoria
+*		VAL_CondRetOK
+*		VAL_CondRetFaltouMemoria
 *
 *   $AE Assertivas de entrada 
 *		refValor referencia um ponteiro livre para um novo valor.
@@ -109,7 +112,8 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *		$P pValor - Ponteiro para o valor a ser destruído.
 *
 *	$FV Valor retornado
-*		VAL_tpCondRetOK;
+*		VAL_CondRetOK;
+*		VAL_CondRetValorInexistente
 *
 *   $AE Assertivas de entrada 
 *		pValor aponta para um valor válido.
@@ -135,7 +139,8 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *							a solução do valor.
 *
 *	$FV Valor retornado
-*		VAL_tpCondRetOK
+*		VAL_CondRetOK
+*		VAL_CondRetValorInexistente
 *
 *   $AE Assertivas de entrada 
 *		pValor aponta para um valor válido.
@@ -162,7 +167,9 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *			solucao	- Valor correspondente a solução desejada.
 *
 *	$FV Valor retornado
-*		VAL_tpCondRetOK
+*		VAL_CondRetOK
+*		VAL_CondRetValorInexistente
+*		VAL_CondRetSolucaoInvalida
 *
 *   $AE Assertivas de entrada 
 *		pValor aponta para um valor válido.
@@ -190,6 +197,7 @@ typedef struct VAL_tagValor* VAL_tppValor ;
 *
 *	$FV Valor retornado
 *		VAL_CondRetOK
+*		VAL_CondRetValorInexistente
 *
 *   $AE Assertivas de entrada 
 *		pValor aponta para um valor válido.

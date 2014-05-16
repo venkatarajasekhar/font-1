@@ -50,7 +50,7 @@
 
 /*************** Código das funções exportadas pelo módulo ***************/
 
-/***********************************************************************
+/*************************************************************************
 *	Função: VAL Cria Valor
 */
 
@@ -76,8 +76,10 @@
 
 	VAL_tpCondRet VAL_destroiValor ( VAL_tppValor pValor ){
 
-		if ( pValor != NULL )
-			free(pValor);
+		if ( pValor == NULL )
+			return VAL_CondRetValorInexistente;
+		
+		free(pValor);
 
 		return VAL_CondRetOK;
 	}
@@ -88,6 +90,9 @@
 */
 
 	VAL_tpCondRet VAL_confereSolucao ( VAL_tppValor pValor, int* pSolucao ){
+
+		if ( pValor == NULL )
+			return VAL_CondRetValorInexistente;
 
 		*pSolucao = pValor->resolvido;
 
@@ -101,6 +106,12 @@
 
 	VAL_tpCondRet VAL_defineSolucao ( VAL_tppValor pValor, int solucao ) {
 	
+		if ( pValor == NULL )
+			return VAL_CondRetValorInexistente;
+
+		if ( solucao < 0 || solucao > 1 )
+			return VAL_CondRetSolucaoInvalida;
+
 		pValor->resolvido = solucao ;
 
 		return VAL_CondRetOK;
@@ -113,6 +124,9 @@
 
 	VAL_tpCondRet VAL_obtemNumeroCelulas ( VAL_tppValor pValor, int* refNumCel ){
 	
+		if ( pValor == NULL )
+			return VAL_CondRetValorInexistente;
+
 		*refNumCel = pValor->num_celulas ;
 
 		return VAL_CondRetOK;

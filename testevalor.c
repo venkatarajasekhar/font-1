@@ -1,7 +1,7 @@
 /**************************************************************************
 *  $MCI Módulo de implementação: Teste específico para módulo valor
 *
-*  Arquivo gerado:				TESTAVALOR.C
+*  Arquivo gerado:				testevalor.c
 *  Letras identificadoras:		TVAL
 *
 *  Nome de base de software:	Exemplo de teste automatizado
@@ -12,6 +12,7 @@
 *  Autores:	vyc, Victor Yves Crispim
 *			sa, Sérgio Argolo
 *			ft, Francisco Tacora
+*
 *  $HA Histórico de evolução:
 *		Versão	Autor	Data			Observações
 *		1.00	ft		02/04/2014		Início do desenvolvimento
@@ -20,18 +21,8 @@
 *
 *  $ED Descrição do módulo
 *	   Este móduo contém as funções específicas para o teste do
-*	   módulo valor. Ilustra como redigir um interpretador de comandos
-*	   de teste específicos utilizando o arcabouço de teste para C.
+*	   módulo valor.
 *
-*  $EIU Interface com o usuário pessoa
-*		Comandos de teste específicos para testar o módulo valor:
-*		
-*		=criar			-	chama a função VAL_criaValor( )
-*		=destruir		-	chama a função VAL_destroiValor( )
-*		=conferir		-	chama a função VAL_confereSolução( <Int> )
-*		=definir		-	chama a função VAL_defineSolução( ) 
-*		=obtercel		-	chama a função VAL_obtemNumeroCelulas( <Int> )
-
 ***************************************************************************/
 
 #include	<stdio.h>
@@ -41,9 +32,10 @@
 #include	"TST_ESPC.H"
 #include	"GENERICO.H"
 #include	"LERPARM.H"
+
 #include	"VALOR.H"
 
-static VAL_tppValor pValor=NULL;
+static VAL_tppValor pValor = NULL;
 
 /* Tabela dos nomes dos comandos de teste específicos */
 
@@ -55,7 +47,7 @@ static VAL_tppValor pValor=NULL;
 
 
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/************* Código das funções exportadas pelo módulo **************/
 
 /***********************************************************************
 *
@@ -68,6 +60,14 @@ static VAL_tppValor pValor=NULL;
 *  $EP Parâmetros
 *    $P ComandoTeste - String contendo o comando
 *
+*		Comandos disponíveis:
+*
+*		=criar		      CondRetEsperada		numCelulas
+*		=destruir	      CondRetEsperada
+*		=conferir		  CondRetEsperada		solucao
+*		=definir		  CondRetEsperada		solucao
+*		=obtercel		  CondRetEsperada		numCelulas
+*
 *  $FV Valor retornado
 *     Ver TST_tpCondRet definido em TST_ESPC.H
 *
@@ -75,27 +75,27 @@ static VAL_tppValor pValor=NULL;
 
 	TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )	
 	{
-		VAL_tpCondRet	CondRetObtido	= VAL_CondRetOK ;
+		VAL_tpCondRet	CondRetObtida	= VAL_CondRetOK ;
 		VAL_tpCondRet	CondRetEsperada	= VAL_CondRetFaltouMemoria ;
 										  /*Inicializa para qualquer coisa*/
-		int		ValorDado	= -1	,
-				ValorObtido	= -1	,
-				NumLidos = -1 ;
+		int		ValorDado	= -1,
+				ValorObtido	= -1,
+				NumLidos	= -1;
 
 		
 		/* Testar VAL Criar valor */
 		if ( strcmp( ComandoTeste , CRIAR_VAL_CMD ) == 0 )
 		{
 			NumLidos = LER_LerParametros("ii",
-							 &ValorDado, &CondRetEsperada) ;
+							 &CondRetEsperada, &ValorDado) ;
 			if ( NumLidos != 2 )
 			{
 				return TST_CondRetParm;
 			} /* if */
 
-			CondRetObtido = VAL_criaValor( &pValor , ValorDado ) ;
+			CondRetObtida = VAL_criaValor( &pValor , ValorDado ) ;
 
-			return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+			return TST_CompararInt( CondRetEsperada , CondRetObtida ,
 									"Retorno errado ao criar valor. ") ;
 		}/* fim ativa: Testar VAL Criar valor */
 
@@ -103,15 +103,15 @@ static VAL_tppValor pValor=NULL;
 		else if ( strcmp( ComandoTeste , DEFINE_CMD ) == 0 )
 		{
 			NumLidos = LER_LerParametros( "ii" ,
-							&ValorDado , &CondRetEsperada ) ;
+							&CondRetEsperada, &ValorDado ) ;
 			if ( NumLidos != 2 )
 			{
 				return TST_CondRetParm ;
 			} /* if */
 
-			 CondRetObtido = VAL_defineSolucao ( pValor , ValorDado ) ;
+			 CondRetObtida = VAL_defineSolucao ( pValor , ValorDado ) ;
 
-			 return TST_CompararInt( CondRetEsperada , CondRetObtido ,
+			 return TST_CompararInt( CondRetEsperada , CondRetObtida ,
 				                     "Retorno errado ao definir solução correta. " );
 
 		} /* fim ativa: Testar VAL Define solucao*/
@@ -120,20 +120,19 @@ static VAL_tppValor pValor=NULL;
 		else if ( strcmp( ComandoTeste , CONFERE_CMD ) == 0 )
 		{
 			NumLidos = LER_LerParametros("ii" ,
-								&ValorDado , &CondRetEsperada ) ;
+								&CondRetEsperada, &ValorDado ) ;
 			if ( NumLidos != 2 )
 			{
 				return TST_CondRetParm ;
-			} /* if*/
-
-			CondRetObtido = VAL_confereSolucao ( pValor , &ValorObtido ) ;
-
-			if ( CondRetObtido != VAL_CondRetOK ){
-			
-				return TST_CompararInt (CondRetEsperada, CondRetObtido,
-										"Condição de retorno incompatível ao conferir solução");
 			}
 
+			CondRetObtida = VAL_confereSolucao ( pValor , &ValorObtido ) ;
+
+			if ( CondRetObtida != VAL_CondRetOK ){
+			
+				return TST_CompararInt (CondRetEsperada, CondRetObtida,
+										"Condição de retorno incompatível ao conferir solução");
+			}
 
 			return TST_CompararInt( ValorDado , ValorObtido ,
 									"A solução esperada é diferente da obtida "	) ;
@@ -145,44 +144,47 @@ static VAL_tppValor pValor=NULL;
 				else if ( strcmp( ComandoTeste , OBTEM_CEL_CMD ) == 0 )
 		{
 			NumLidos = LER_LerParametros(  "ii" , 
-								&ValorDado, &CondRetEsperada ) ;
+								&CondRetEsperada, &ValorDado ) ;
 			if ( NumLidos != 2 )
 			{
 				return	TST_CondRetParm ;
-			}  /* if */
+			}
 
-			/*int if*/
-
-			CondRetObtido = VAL_obtemNumeroCelulas( pValor , &ValorObtido ) ;
+			CondRetObtida = VAL_obtemNumeroCelulas( pValor , &ValorObtido ) ;
 				
-			if ( CondRetObtido != VAL_CondRetOK ){
-				TST_CompararInt(  CondRetEsperada , CondRetObtido ,
+			if ( CondRetObtida != VAL_CondRetOK ){
+				return TST_CompararInt(  CondRetEsperada , CondRetObtida ,
 										"Retorno errado ao obter numero de celulas. " ) ;
 			}
 
 			return TST_CompararInt( ValorDado , ValorObtido ,
 									"O número de células esperado é diferente do obtido "	) ;
-				} /* fim ativa: Testar VAL Obter numero de celulas. */
+		} /* fim ativa: Testar VAL Obter numero de celulas. */
 
 		/* Testar VAL Destruir valor */
 		else if ( strcmp( ComandoTeste , DESTROI_CMD ) == 0 )
 		{
-			NumLidos = LER_LerParametros( "i" ,
-							&CondRetEsperada) ;
+			NumLidos = LER_LerParametros( "i" ,	&CondRetEsperada) ;
+
 			if ( NumLidos != 1 )
 			{
 				return TST_CondRetParm;
-			} /* if*/
+			}
 
-			CondRetObtido = VAL_destroiValor( pValor );
+			CondRetObtida = VAL_destroiValor( pValor );
 
-			return TST_CompararInt( CondRetEsperada , CondRetObtido,
+			pValor = NULL;
+
+			return TST_CompararInt( CondRetEsperada , CondRetObtida,
 				"Retorno errado destruir valor." ) ;
 	
 		} /* fim ativa: Testar VAL Destroi valor */
 
-	/*Fim do modulo de implementação: Modulo de teste específico*/
-}
+		else
+			return TST_CondRetNaoConhec ;
+
+	}/* Fim função: TVAL Efetuar operações de teste específicas para valor */
 
 
 
+/********** Fim do módulo de implementação: Módulo de teste específico **********/

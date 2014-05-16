@@ -135,6 +135,9 @@
 		if ( pCelula == NULL ) 
 			return CEL_CondRetCelulaInexistente ;
 
+		if ( valor < 0 || valor > 2 )
+			return CEL_CondRetEstadoInvalido;
+
 		pCelula->estado_atual = valor;
 
 		return CEL_CondRetOK;
@@ -149,6 +152,9 @@
 		
 		if ( pCelula == NULL ) 
 			return CEL_CondRetCelulaInexistente ;
+
+		if ( valor < 0 || valor > 2 )
+			return CEL_CondRetEstadoInvalido;
 
 		pCelula->estado_correto = valor;
 

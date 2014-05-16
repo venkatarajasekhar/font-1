@@ -23,8 +23,7 @@
 *
 *  $ED Descrição do módulo
 *     Este módulo contém as funções específicas para o teste do
-*     módulo célula. Ilustra como redigir um interpretador de comandos
-*     de teste específicos utilizando o arcabouço de teste para C.
+*     módulo célula.
 *
 ************************************************************************************/
 
@@ -62,12 +61,6 @@ static CEL_tppCelula pCelula = NULL;
 *  $EP Parâmetros
 *     $P ComandoTeste - String contendo o comando
 *
-*  $FV Valor retornado
-*     Ver TST_tpCondRet definido em TST_ESPC.H
-*
-*  $EP Parâmetros
-*		ComandoTeste - String contendo o comando
-*
 *		Comandos disponíveis:
 *
 *		=criar				      CondRetObtido  
@@ -77,6 +70,9 @@ static CEL_tppCelula pCelula = NULL;
 *		=alterarestadocorreto	  CondRetObtido		valor	
 *		=destruir				  CondRetObtido			
 *
+*  $FV Valor retornado
+*     Ver TST_tpCondRet definido em TST_ESPC.H
+*
 ***********************************************************************/
 
    TST_tpCondRet TST_EfetuarComando( char * ComandoTeste )
@@ -85,7 +81,6 @@ static CEL_tppCelula pCelula = NULL;
       CEL_tpCondRet CondRetObtida   = CEL_CondRetOK ;
       CEL_tpCondRet CondRetEsperada = CEL_CondRetFaltouMemoria ;
       
-      int ValorDado     = -1 ; 
       int NumLidos		= -1 ;
 	  int ValorEsperado = -1 ;
 	  int ValorObtido	= -1 ;
@@ -93,7 +88,6 @@ static CEL_tppCelula pCelula = NULL;
       TST_tpCondRet Ret ;
 
       /* Testar CEL Cria Célula */
-
 
          if ( strcmp( ComandoTeste , CRIAR_CEL_CMD ) == 0 )		 
          {
@@ -132,7 +126,7 @@ static CEL_tppCelula pCelula = NULL;
 			}
 
             return TST_CompararInt( ValorEsperado , ValorObtido ,
-                                   "O estado atual está incorreto." );
+                                   "O estado atual esperado é diferente do obtido." );
 
          } /* fim ativa: CEL Obtem Estado Atual */
 
@@ -156,7 +150,7 @@ static CEL_tppCelula pCelula = NULL;
 			}
 
             return TST_CompararInt( ValorEsperado , ValorObtido ,
-                                   "O estado correto esperado não é o estado obtido."  );
+                                   "O estado correto esperado é diferente do obtido."  );
 
          } /* fim ativa: CEL Obtem Estado Correto */
 
@@ -219,8 +213,12 @@ static CEL_tppCelula pCelula = NULL;
                                     "Retorno errado ao destruir Celula." );
 
          } /* fim ativa: Testar CEL Destroi Célula */
-
 		 
-   }/* Fim função: TCEL Efetuar operações de teste específicas para célula */
+		 else
+			 return TST_CondRetNaoConhec ;
+
+   }/* Fim função: TCEL Efetuar operações de teste específicas para celula */
   
+
+
 /********** Fim do módulo de implementação: Módulo de teste específico **********/
